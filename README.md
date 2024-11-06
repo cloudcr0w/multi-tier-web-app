@@ -40,7 +40,7 @@ To set up and deploy this project on your AWS account, follow these steps:
 ### 1. Clone the Repository
 First, clone the repository to your local machine:
 
-git clone https://github.com/cloudcr0w/multi-tier-webapp.git
+git clone https://github.com/cloudcr0w/multi-tier-web-app.git
 
 ### 2. Set Up AWS Resources
 EC2: Launch an EC2 instance and configure it with the necessary security group to allow HTTP/HTTPS traffic.
