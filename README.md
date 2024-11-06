@@ -58,4 +58,4 @@ Feel free to reach out to me if you have any questions or want to connect!
 
 Email: adamwronowy@gmail.com
 GitHub: cloudcr0w
-LinkedIn: Adam Wrona
+LinkedIn: www.linkedin.com/in/adam-wrona-111ba728b
