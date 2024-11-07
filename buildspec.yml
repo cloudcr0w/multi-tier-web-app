@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      - echo "Installing dependencies..."
+      - cd backend && npm install
+      - cd ../frontend && npm install
+  build:
+    commands:
+      - echo "Building backend..."
+      - cd ../backend && npm run build
+      - echo "Building frontend..."
+      - cd ../frontend && npm run build
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
+  base-directory: backend
