@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 const db = mysql.createConnection({
     host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com', // Zastąp tym endpointem bazy danych RDS
     user: 'admin', // Nazwa użytkownika bazy danych
-    password: 'etnaD232!', // Hasło do bazy danych
+    password: 'Admin1234!', // Hasło do bazy danych
     database: 'portfolioDB' // Nazwa bazy danych
 });
 
@@ -43,6 +43,6 @@ app.post('/contact', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
+app.listen(3000, '0.0.0.0', () => {
     console.log(`Serwer uruchomiony na porcie ${PORT}`);
 });
