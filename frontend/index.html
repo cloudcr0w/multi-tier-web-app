@@ -1,39 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adam Wrona - Portfolio</title>
+    <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Adam Wrona - Cloud Practitioner</h1>
-        <p>Learning AWS, aiming for Solutions Architect Associate Certification</p>
+        <h1>Welcome to Multi-Tier Web Application</h1>
     </header>
+
     <section id="about">
         <h2>About Me</h2>
-        <p>I am currently expanding my AWS skills and have completed the AWS Cloud Practitioner certification. I am pursuing the Solutions Architect Associate certification to deepen my knowledge in cloud architecture and DevOps.</p>
+        <p>Hi! I'm Adam, a passionate developer currently diving deep into AWS cloud technologies. I'm studying for the AWS Solutions Architect Associate certification, and I've already obtained the AWS Cloud Practitioner certification. With a background in logistics and production, I bring strong problem-solving skills and an eye for detail. I'm eager to build scalable and secure cloud infrastructures and continue learning in the cloud engineering field.</p>
     </section>
+
+    <section id="project-info">
+        <h2>About This Project</h2>
+        <p class="p3">This website is part of my personal portfolio showcasing my skills in cloud development. The project is built using AWS services, including EC2 for hosting, S3 for static storage, and Route 53 for DNS management. It's designed to be simple, responsive, and demonstrate best practices in cloud infrastructure.</p>
+        <h3>Technologies Used:</h3>
+        <ul>
+            <li class="p3"><strong>AWS EC2</strong> – for hosting the application</li>
+            <li class="p3"><strong>AWS S3</strong> – for static file storage</li>
+            <li class="p3"><strong>AWS Route 53</strong> – for DNS management</li>
+            <li class="p3"><strong>HTML & CSS</strong> – for front-end design</li>
+            <li class="p3"><strong>GitHub</strong> – for version control and project management</li>
+        </ul>
+    </section>
+    
+    
+
     <section id="contact">
         <h2>Contact Me</h2>
         <form id="contact-form">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+
             <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
+            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+
             <button type="submit">Send Message</button>
         </form>
     </section>
+
     <footer>
-        <p>Find me on LinkedIn and GitHub:</p>
-        <a href="https://www.linkedin.com/in/adam-wrona-111ba728b/">LinkedIn</a> | 
-        <a href="https://github.com/cloudcr0w">GitHub</a> | 
-        <a href="mailto:adamwronowy@gmail.com">Email</a>
+        <p>Connect with me:</p>
+        <a href="https://www.linkedin.com/in/adam-wrona-111ba728b/" target="_blank">LinkedIn</a> | 
+        <a href="https://github.com/cloudcr0w" target="_blank">GitHub</a> | 
+        <a href="mailto:adamwronowy@gmail.com" target="_blank">Email</a>
     </footer>
-<script src="script.js"></script>
 </body>
 </html>
