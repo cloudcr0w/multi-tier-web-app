@@ -208,3 +208,26 @@ p {
 	color: #888;
 	font-style: italic;
 }
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px); 
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  section {
+    opacity: 0; 
+    animation: fadeIn 1s ease forwards;
+  }
+  #about {
+    animation-delay: 0.5s;
+  }
+  #contact {
+    animation-delay: 1.0s;
+  }
+  #project-info {
+    animation-delay: 1.5s;
+  }
