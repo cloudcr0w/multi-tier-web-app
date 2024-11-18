@@ -7,13 +7,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Database connection configuration
-const dbConfig = {
+const db = mysql.createConnection({
     host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com',
     user: 'admin',
     password: 'Admin1234!',
     database: 'portfolioDB',
-    connectTimeout: 10000, // Connection timeout
-};
+    connectTimeout: 10000, 
+    keepAliveInitialDelay: 10000, 
+    multipleStatements: true 
+});
+
 
 // Function to handle the database connection
 let db;
