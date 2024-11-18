@@ -1,59 +1,38 @@
-const express = require('express')
-const mysql = require('mysql')
-const validator = require('validator')
-const app = express()
-const PORT = process.env.PORT || 3000
-
-const db = mysql.createConnection({
-	host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com',
-	user: 'admin',
-	password: 'Admin1234!',
-	database: 'portfolioDB',
-})
-
-db.connect(err => {
-	if (err) throw err
-	console.log('Połączono z bazą danych MySQL')
-})
-
-app.use(express.json())
-
-app.get('/', (req, res) => {
-	res.send('Server działa! Witamy na backendzie portfolia.')
-})
-
-app.post('/contact', (req, res) => {
-	const { name, email, message } = req.body
-	console.log('Otrzymane dane:', { name, email, message })
-
-	if (!name || !email || !message) {
-		return res.status(400).send('Brak wymaganych danych!')
-	}
-
-	if (!validator.isEmail(email)) {
-		return res.status(400).send('Niepoprawny adres email.')
-	}
-
-	console.log('Wszystkie dane są poprawne. Zapisuję do bazy:', { name, email, message })
-
-	const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
-	db.query(query, [name, email, message], (err, result) => {
-		if (err) {
-			console.error(err)
-			return res.status(500).send('Błąd bazy danych')
-		}
-		res.send('Wiadomość zapisana!')
-	})
-})
-
-app.listen(3000, '0.0.0.0', () => {
-	console.log(`Serwer uruchomiony na porcie ${PORT}`)
-})
+// Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', () => {
 	const sections = document.querySelectorAll('section')
 	sections.forEach((section, index) => {
 		setTimeout(() => {
-			section.style.opacity = 1
-		}, index * 500)
+			section.style.opacity = 1 // Apply animation effect
+		}, index * 500) // Delay for each section
+	})
+
+	// Form submission logic
+	const form = document.querySelector('#contact-form')
+	form.addEventListener('submit', async e => {
+		e.preventDefault()
+
+		const name = document.querySelector('#name').value
+		const email = document.querySelector('#email').value
+		const message = document.querySelector('#message').value
+
+		try {
+			const response = await fetch('http://3.93.195.12:3000/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ name, email, message }),
+			})
+
+			if (response.ok) {
+				alert('Message sent successfully!')
+			} else {
+				alert('Error sending message. Please try again.')
+			}
+		} catch (err) {
+			console.error('Error:', err)
+			alert('Error sending message. Please check your network connection.')
+		}
 	})
 })
