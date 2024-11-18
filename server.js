@@ -7,25 +7,23 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Database connection configuration
-const db = mysql.createConnection({
+const dbConfig = {
     host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com',
     user: 'admin',
     password: 'Admin1234!',
     database: 'portfolioDB',
-    connectTimeout: 10000, 
-    keepAliveInitialDelay: 10000, 
-    multipleStatements: true 
-});
+    connectTimeout: 10000,
+    multipleStatements: true,
+};
 
+let database;
 
 // Function to handle the database connection
-let db;
-
 function handleDbConnection() {
-    db = mysql.createConnection(dbConfig);
+    database = mysql.createConnection(dbConfig);
 
     // Attempt to connect to the database
-    db.connect((err) => {
+    database.connect((err) => {
         if (err) {
             console.error('Database connection error:', err.message);
             // Retry the connection after 5 seconds if it fails
@@ -36,7 +34,7 @@ function handleDbConnection() {
     });
 
     // Handle database errors
-    db.on('error', (err) => {
+    database.on('error', (err) => {
         console.error('Database error:', err.message);
         // Reconnect if the connection was lost
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -77,7 +75,7 @@ app.post('/contact', (req, res) => {
 
     // Query to insert data into the "messages" table
     const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)';
-    db.query(query, [name, email, message], (err, result) => {
+    database.query(query, [name, email, message], (err, result) => {
         if (err) {
             console.error('Error saving to the database:', err.message);
             return res.status(500).send('Database error');
