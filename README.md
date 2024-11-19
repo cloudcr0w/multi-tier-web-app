@@ -59,3 +59,14 @@ This project is a portfolio application designed to showcase a multi-tier archit
 ---
 
 This project highlights my ability to design and deploy cloud-based web applications and serves as a showcase of my skills in cloud computing, backend development, and AWS services.
+
+
+## Current Progress
+
+- [x] Backend hosted on EC2 and integrated with RDS.
+- [x] Static website hosted on S3 and distributed via CloudFront.
+- [x] Configured custom domain using Route 53.
+- [ ] Configuring subdomain `api.crow-project.click` with SSL and CloudFront.
+- [ ] Testing full functionality of the contact form and database integration.
+
+Stay tuned for updates as I complete the project!
