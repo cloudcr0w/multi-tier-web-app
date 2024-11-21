@@ -1,50 +1,48 @@
-// Wait for the DOM to load
-document.addEventListener('DOMContentLoaded', () => {
-	// Animate sections
-	const sections = document.querySelectorAll('section')
-	sections.forEach((section, index) => {
-		setTimeout(() => {
-			section.style.opacity = 1 // Apply animation effect
-		}, index * 500) // Delay for each section
+const express = require('express')
+const mysql = require('mysql')
+const cors = require('cors')
+const app = express()
+
+const dbConfig = {
+	host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com',
+	user: 'admin',
+	password: 'Admin1234!',
+	database: 'portfolioDB',
+}
+
+const database = mysql.createPool(dbConfig)
+
+app.use(express.json())
+app.use(
+	cors({
+		origin: 'https://crow-project.click',
+		methods: ['POST'],
+		allowedHeaders: ['Content-Type'],
 	})
+)
 
-	// Form submission logic
-	const form = document.querySelector('#contact-form')
-	form.addEventListener('submit', async e => {
-		e.preventDefault() // Prevent default form submission
+app.post('/contact', (req, res) => {
+	const { name, email, message } = req.body
 
-		const name = document.querySelector('#name').value
-		const email = document.querySelector('#email').value
-		const message = document.querySelector('#message').value
+	if (!name || !email || !message) {
+		return res.status(400).send('Missing required fields!')
+	}
 
-		try {
-			// Send a POST request to the API
-			const response = await fetch('https://api.crow-project.click/contact', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ name, email, message }),
-			})
+	if (!validator.isEmail(email)) {
+		return res.status(400).send('Invalid email address.')
+	}
 
-			// Check for server response status
-			if (response.ok) {
-				alert('Message sent successfully!')
-			} else if (response.status === 400) {
-				alert('Validation error: Please check your inputs.')
-			} else if (response.status === 500) {
-				alert('Server error: Please try again later.')
-			} else {
-				alert('Unexpected error: Please try again.')
-			}
-
-			// Log response data (optional)
-			const data = await response.json()
-			console.log('Response data:', data)
-		} catch (err) {
-			// Catch network or other errors
-			console.error('Error:', err)
-			alert('Error sending message. Please check your network connection.')
+	const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
+	database.query(query, [name, email, message], (err, result) => {
+		if (err) {
+			console.error('Database error:', err)
+			return res.status(500).send('Database error')
 		}
+		res.send('Message saved!')
 	})
+})
+
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}`)
 })
