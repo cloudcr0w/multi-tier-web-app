@@ -1,48 +1,29 @@
-const express = require('express')
-const mysql = require('mysql')
-const cors = require('cors')
-const app = express()
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#contact-form');
+    form.addEventListener('submit', async e => {
+        e.preventDefault(); // Zapobiega domyślnej wysyłce formularza
 
-const dbConfig = {
-	host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com',
-	user: 'admin',
-	password: 'Admin1234!',
-	database: 'portfolioDB',
-}
+        const name = document.querySelector('#name').value;
+        const email = document.querySelector('#email').value;
+        const message = document.querySelector('#message').value;
 
-const database = mysql.createPool(dbConfig)
+        try {
+            const response = await fetch('https://api.crow-project.click/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, message }),
+            });
 
-app.use(express.json())
-app.use(
-	cors({
-		origin: 'https://crow-project.click',
-		methods: ['POST'],
-		allowedHeaders: ['Content-Type'],
-	})
-)
-
-app.post('/contact', (req, res) => {
-	const { name, email, message } = req.body
-
-	if (!name || !email || !message) {
-		return res.status(400).send('Missing required fields!')
-	}
-
-	if (!validator.isEmail(email)) {
-		return res.status(400).send('Invalid email address.')
-	}
-
-	const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
-	database.query(query, [name, email, message], (err, result) => {
-		if (err) {
-			console.error('Database error:', err)
-			return res.status(500).send('Database error')
-		}
-		res.send('Message saved!')
-	})
-})
-
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`)
-})
+            if (response.ok) {
+                alert('Message sent successfully!');
+            } else {
+                alert('Error: ' + response.statusText);
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Error sending message. Please check your network connection.');
+        }
+    });
+});
