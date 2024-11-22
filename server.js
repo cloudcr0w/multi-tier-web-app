@@ -1,3 +1,5 @@
+const fs = require('fs')
+const https = require('https')
 const express = require('express')
 const mysql = require('mysql')
 const validator = require('validator')
@@ -19,10 +21,9 @@ const dbConfig = {
 const database = mysql.createPool(dbConfig)
 
 app.use(express.json())
-
 app.use(
 	cors({
-		origin: 'https://crow-project.click',
+		origin: 'http://3.93.195.12:3000',
 		methods: ['POST', 'GET'],
 		allowedHeaders: ['Content-Type'],
 	})
@@ -67,6 +68,12 @@ app.post('/contact', (req, res) => {
 	})
 })
 
-app.listen(PORT, '0.0.0.0', () => {
-	console.log(`Server is running on port ${PORT}`)
+// Użycie HTTPS
+const options = {
+	key: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/privkey.pem'), // Klucz prywatny
+	cert: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/fullchain.pem'), // Certyfikat
+}
+
+https.createServer(options, app).listen(PORT, () => {
+	console.log(`Server is running on https://localhost:${PORT}`)
 })
