@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-	const form = document.querySelector('#contact-form')ot GET /contact
+	const form = document.querySelector('#contact-form')
 	form.addEventListener('submit', async e => {
 		e.preventDefault()
 
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		console.log('Form data:', { name, email, message })
 
 		try {
-			const response = await fetch('https://3.93.195.12:3000/contact', {
+			const response = await fetch('http://3.93.195.12:3000/contact', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
