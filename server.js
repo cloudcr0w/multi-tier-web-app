@@ -23,7 +23,7 @@ const database = mysql.createPool(dbConfig)
 app.use(express.json())
 app.use(
 	cors({
-		origin: 'http://3.93.195.12:3000',
+		origin: 'https://www.crow-project.click',
 		methods: ['POST', 'GET'],
 		allowedHeaders: ['Content-Type'],
 	})
