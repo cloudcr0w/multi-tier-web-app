@@ -68,7 +68,7 @@ app.post('/contact', (req, res) => {
 	})
 })
 
-// Użycie HTTPS
+
 const options = {
 	key: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/privkey.pem'), // Klucz prywatny
 	cert: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/fullchain.pem'), // Certyfikat
