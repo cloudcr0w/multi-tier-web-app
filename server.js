@@ -23,21 +23,11 @@ const database = mysql.createPool(dbConfig)
 app.use(express.json())
 app.use(
 	cors({
-		origin: 'https://www.crow-project.click',
-		methods: ['POST', 'GET'],
+		origin: 'https://www.crow-project.click', 
+		methods: ['POST'],
 		allowedHeaders: ['Content-Type'],
 	})
 )
-
-setInterval(() => {
-	database.query('SELECT 1', err => {
-		if (err) {
-			console.error('Keep-alive query failed:', err.message)
-		} else {
-			console.log('Keep-alive query successful.')
-		}
-	})
-}, 60000)
 
 app.get('/', (req, res) => {
 	res.send('Server is running! Welcome to the portfolio backend.')
@@ -55,12 +45,10 @@ app.post('/contact', (req, res) => {
 		return res.status(400).send('Invalid email address.')
 	}
 
-	console.log('All data is valid. Saving to the database:', { name, email, message })
-
 	const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
 	database.query(query, [name, email, message], (err, result) => {
 		if (err) {
-			console.error('Error saving to the database:', err.message, err.stack)
+			console.error('Error saving to the database:', err.message)
 			return res.status(500).send('Database error')
 		}
 		console.log('Message saved! ID:', result.insertId)
@@ -68,10 +56,9 @@ app.post('/contact', (req, res) => {
 	})
 })
 
-
 const options = {
-	key: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/privkey.pem'), // Klucz prywatny
-	cert: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/fullchain.pem'), // Certyfikat
+	key: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/privkey.pem'),
+	cert: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/fullchain.pem'),
 }
 
 https.createServer(options, app).listen(PORT, () => {
