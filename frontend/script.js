@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const message = document.querySelector('#message').value.trim()
 
 		try {
-			const response = await fetch('https://3.93.195.12:3000/contact', {
+			const response = await fetch('https://api.crow-project.click/contact', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
