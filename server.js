@@ -21,13 +21,22 @@ const dbConfig = {
 const database = mysql.createPool(dbConfig)
 
 app.use(express.json())
+
 app.use(
 	cors({
-		origin: 'https://www.crow-project.click', 
-		methods: ['POST'],
+		origin: 'https://crow-project.click',
+		methods: ['GET', 'POST', 'OPTIONS'],
 		allowedHeaders: ['Content-Type'],
+		credentials: true,
 	})
 )
+
+app.options('*', (req, res) => {
+	res.header('Access-Control-Allow-Origin', 'https://crow-project.click')
+	res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+	res.header('Access-Control-Allow-Headers', 'Content-Type')
+	res.sendStatus(204)
+})
 
 app.get('/', (req, res) => {
 	res.send('Server is running! Welcome to the portfolio backend.')
@@ -64,3 +73,6 @@ const options = {
 https.createServer(options, app).listen(PORT, () => {
 	console.log(`Server is running on https://localhost:${PORT}`)
 })
+console.log('Request headers:', req.headers)
+console.log('Request body:', req.body)
+console.log('Database configuration:', dbConfig)
