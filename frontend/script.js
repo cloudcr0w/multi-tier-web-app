@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		const email = document.querySelector('#email').value.trim()
 		const message = document.querySelector('#message').value.trim()
 
-		console.log('Form data:', { name, email, message })
-
 		try {
 			const response = await fetch('https://3.93.195.12:3000/contact', {
 				method: 'POST',
@@ -16,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ name, email, message }),
-			
 			})
 
 			if (response.ok) {
@@ -28,5 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error('Error:', err)
 			alert('Error sending message. Please check your network connection.')
 		}
+		console.log('Form data:', { name, email, message })
 	})
 })
