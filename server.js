@@ -54,6 +54,9 @@ app.post('/contact', (req, res) => {
 		return res.status(400).send('Invalid email address.')
 	}
 
+	console.log('Request headers:', req.headers)
+	console.log('Request body:', req.body)
+
 	const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
 	database.query(query, [name, email, message], (err, result) => {
 		if (err) {
@@ -73,6 +76,3 @@ const options = {
 https.createServer(options, app).listen(PORT, () => {
 	console.log(`Server is running on https://localhost:${PORT}`)
 })
-console.log('Request headers:', req.headers)
-console.log('Request body:', req.body)
-console.log('Database configuration:', dbConfig)
