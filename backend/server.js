@@ -1,51 +1,85 @@
-const express = require('express');
-const mysql = require('mysql');
-const validator = require('validator');
-const app = express();
-const PORT = process.env.PORT || 3000;
+const fs = require('fs')
+const https = require('https')
+const express = require('express')
+const mysql = require('mysql')
+const validator = require('validator')
+const cors = require('cors')
 
-const db = mysql.createConnection({
-    host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com',
-    user: 'admin',
-    password: 'Admin1234!',
-    database: 'portfolioDB'
-});
+const app = express()
+const PORT = process.env.PORT || 3000
 
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Połączono z bazą danych MySQL');
-});
+const dbConfig = {
+	host: 'portfoliodb.c18s48a0gb7h.us-east-1.rds.amazonaws.com',
+	user: 'admin',
+	password: 'Admin1234!',
+	database: 'portfolioDB',
+	connectTimeout: 10000,
+	multipleStatements: true,
+	connectionLimit: 10,
+}
 
-app.use(express.json());
+const database = mysql.createPool(dbConfig)
+
+app.use(express.json())
+
+app.use(
+	cors({
+		origin: 'https://crow-project.click',
+		methods: ['GET', 'POST', 'OPTIONS'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		credentials: true,
+	})
+)
+app.use((req, res, next) => {
+	res.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+	res.header('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self';")
+	res.header('X-Content-Type-Options', 'nosniff')
+	res.header('X-Frame-Options', 'DENY')
+	res.header('Referrer-Policy', 'no-referrer')
+	next()
+})
+
+app.options('*', (req, res) => {
+	res.header('Access-Control-Allow-Origin', 'https://crow-project.click')
+	res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+	res.header('Access-Control-Allow-Headers', 'Content-Type')
+	res.sendStatus(204)
+})
 
 app.get('/', (req, res) => {
-    res.send('Server działa! Witamy na backendzie portfolia.');
-});
+	res.send('Server is running! Welcome to the portfolio backend.')
+})
 
 app.post('/contact', (req, res) => {
-    const { name, email, message } = req.body;
-    console.log('Otrzymane dane:', { name, email, message });
+	const { name, email, message } = req.body
+	console.log('Received data:', { name, email, message })
 
-    if (!name || !email || !message) {
-        return res.status(400).send('Brak wymaganych danych!');
-    }
+	if (!name || !email || !message) {
+		console.error('Validation error: Missing fields.')
+		return res.status(400).send('Missing required fields!')
+	}
 
-    if (!validator.isEmail(email)) {
-        return res.status(400).send('Niepoprawny adres email.');
-    }
+	if (!validator.isEmail(email)) {
+		console.error('Validation error: Invalid email.')
+		return res.status(400).send('Invalid email address.')
+	}
 
-    console.log('Wszystkie dane są poprawne. Zapisuję do bazy:', { name, email, message });
+	const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
+	database.query(query, [name, email, message], (err, result) => {
+		if (err) {
+			console.error('Database error:', err.message)
+			return res.status(500).send('Database error: Unable to save message.')
+		}
+		console.log('Message saved! ID:', result.insertId)
+		res.send('Message saved successfully.')
+	})
+})
 
-    const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)';
-    db.query(query, [name, email, message], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Błąd bazy danych');
-        }
-        res.send('Wiadomość zapisana!');
-    });
-});
+const options = {
+	key: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/privkey.pem'),
+	cert: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/fullchain.pem'),
+}
 
-app.listen(3000, '0.0.0.0', () => {
-    console.log(`Serwer uruchomiony na porcie ${PORT}`);
-});
+https.createServer(options, app).listen(PORT, () => {
+	console.log(`Server is running on https://localhost:${PORT}`)
+})
