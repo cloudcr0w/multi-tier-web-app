@@ -26,10 +26,18 @@ app.use(
 	cors({
 		origin: 'https://crow-project.click',
 		methods: ['GET', 'POST', 'OPTIONS'],
-		allowedHeaders: ['Content-Type'],
+		allowedHeaders: ['Content-Type','Authorization'],
 		credentials: true,
 	})
 )
+app.use((req, res, next) => {
+    res.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.header('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self';");
+    res.header('X-Content-Type-Options', 'nosniff');
+    res.header('X-Frame-Options', 'DENY');
+    res.header('Referrer-Policy', 'no-referrer');
+    next();
+});
 
 app.options('*', (req, res) => {
 	res.header('Access-Control-Allow-Origin', 'https://crow-project.click')
@@ -45,7 +53,6 @@ app.get('/', (req, res) => {
 app.post('/contact', (req, res) => {
 	const { name, email, message } = req.body
 	console.log('Received data:', { name, email, message })
-
 	if (!name || !email || !message) {
 		return res.status(400).send('Missing required fields!')
 	}
