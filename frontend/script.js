@@ -1,13 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('#contact-form')
+    const form = document.querySelector('#contact-form');
+    const messageDiv = document.querySelector('#form-message');
+
     form.addEventListener('submit', async e => {
-        e.preventDefault()
+        e.preventDefault();
 
-        const name = document.querySelector('#name').value.trim()
-        const email = document.querySelector('#email').value.trim()
-        const message = document.querySelector('#message').value.trim()
+        const name = document.querySelector('#name').value.trim();
+        const email = document.querySelector('#email').value.trim();
+        const message = document.querySelector('#message').value.trim();
 
-        console.log('Form data:', { name, email, message }); 
+        
+        messageDiv.classList.add('hidden');
+        messageDiv.textContent = '';
 
         try {
             const response = await fetch('https://api.crow-project.click/contact', {
@@ -16,16 +20,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ name, email, message }),
-            })
+            });
 
             if (response.ok) {
-                alert('Message sent successfully!')
+           
+                messageDiv.textContent = 'Message sent successfully!';
+                messageDiv.classList.remove('hidden', 'error');
+                messageDiv.classList.add('success');
+
+                form.reset();
             } else {
-                alert('Error: ' + response.statusText)
+             
+                messageDiv.textContent = 'Error: ' + response.statusText;
+                messageDiv.classList.remove('hidden', 'success');
+                messageDiv.classList.add('error');
             }
         } catch (err) {
-            console.error('Error:', err)
-            alert('Error sending message. Please check your network connection.')
+            console.error('Error:', err);
+
+            messageDiv.textContent = 'Error sending message. Please check your network connection.';
+            messageDiv.classList.remove('hidden', 'success');
+            messageDiv.classList.add('error');
         }
-    })
-})
+    });
+});

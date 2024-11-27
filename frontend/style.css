@@ -202,6 +202,26 @@ p {
 	min-height: 100px;
 	resize: vertical;
 }
+.hidden {
+	display: none;
+}
+#form-message {
+	margin-top: 15px;
+	padding: 10px;
+	border-radius: 5px;
+	text-align: center;
+}
+
+#form-message.success {
+	color: #155724;
+	background-color: #d4edda;
+	border: 1px solid #c3e6cb;
+}
+#form-message.error {
+	color: #721c24;
+	background-color: #f8d7da;
+	border: 1px solid #f5c6cb;
+}
 
 #contact-form input::placeholder,
 #contact-form textarea::placeholder {
@@ -209,25 +229,25 @@ p {
 	font-style: italic;
 }
 @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px); 
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  section {
-    opacity: 0; 
-    animation: fadeIn 1s ease forwards;
-  }
-  #about {
-    animation-delay: 0.5s;
-  }
-  #contact {
-    animation-delay: 1.0s;
-  }
-  #project-info {
-    animation-delay: 1.5s;
-  }
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+section {
+	opacity: 0;
+	animation: fadeIn 1s ease forwards;
+}
+#about {
+	animation-delay: 0.5s;
+}
+#contact {
+	animation-delay: 1s;
+}
+#project-info {
+	animation-delay: 1.5s;
+}
