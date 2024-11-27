@@ -22,14 +22,17 @@ const database = mysql.createPool(dbConfig)
 
 app.use(express.json())
 
+// CORS configuration
 app.use(
 	cors({
-		origin: 'https://crow-project.click',
+		origin: ['https://crow-project.click', 'https://www.crow-project.click'], // Dodane obie domeny
 		methods: ['GET', 'POST', 'OPTIONS'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 		credentials: true,
 	})
 )
+
+// Security headers
 app.use((req, res, next) => {
 	res.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
 	res.header('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self';")
@@ -39,13 +42,15 @@ app.use((req, res, next) => {
 	next()
 })
 
+// OPTIONS preflight handling
 app.options('*', (req, res) => {
-	res.header('Access-Control-Allow-Origin', 'https://crow-project.click')
+	res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://crow-project.click')
 	res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-	res.header('Access-Control-Allow-Headers', 'Content-Type')
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 	res.sendStatus(204)
 })
 
+// Routes
 app.get('/', (req, res) => {
 	res.send('Server is running! Welcome to the portfolio backend.')
 })
@@ -54,6 +59,7 @@ app.post('/contact', (req, res) => {
 	const { name, email, message } = req.body
 	console.log('Received data:', { name, email, message })
 
+	// Validation
 	if (!name || !email || !message) {
 		console.error('Validation error: Missing fields.')
 		return res.status(400).send('Missing required fields!')
@@ -64,6 +70,7 @@ app.post('/contact', (req, res) => {
 		return res.status(400).send('Invalid email address.')
 	}
 
+	// Database insertion
 	const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
 	database.query(query, [name, email, message], (err, result) => {
 		if (err) {
@@ -75,6 +82,7 @@ app.post('/contact', (req, res) => {
 	})
 })
 
+// HTTPS server
 const options = {
 	key: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/privkey.pem'),
 	cert: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/fullchain.pem'),
