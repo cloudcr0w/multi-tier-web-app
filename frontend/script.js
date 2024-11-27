@@ -1,3 +1,6 @@
+document.querySelector('#loading').classList.remove('hidden')
+document.querySelector('#loading').classList.add('hidden')
+
 document.addEventListener('DOMContentLoaded', () => {
 	const form = document.querySelector('#contact-form')
 	const messageDiv = document.querySelector('#form-message')
