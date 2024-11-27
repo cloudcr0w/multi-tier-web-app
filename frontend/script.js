@@ -1,9 +1,7 @@
-document.querySelector('#loading').classList.remove('hidden')
-document.querySelector('#loading').classList.add('hidden')
-
 document.addEventListener('DOMContentLoaded', () => {
 	const form = document.querySelector('#contact-form')
 	const messageDiv = document.querySelector('#form-message')
+	const loading = document.querySelector('#loading')
 
 	form.addEventListener('submit', async e => {
 		e.preventDefault()
@@ -15,7 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
 		messageDiv.classList.add('hidden')
 		messageDiv.textContent = ''
 
+		if (!name || !email || !message) {
+			messageDiv.textContent = 'All fields are required.'
+			messageDiv.classList.remove('hidden', 'success')
+			messageDiv.classList.add('error')
+			return
+		}
+
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+			messageDiv.textContent = 'Please enter a valid email address.'
+			messageDiv.classList.remove('hidden', 'success')
+			messageDiv.classList.add('error')
+			return
+		}
+
 		try {
+			loading.classList.remove('hidden') 
+
 			const response = await fetch('https://api.crow-project.click/contact', {
 				method: 'POST',
 				headers: {
@@ -25,13 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			})
 
 			if (response.ok) {
+				const responseData = await response.text() 
 				messageDiv.textContent = 'Message sent successfully!'
 				messageDiv.classList.remove('hidden', 'error')
 				messageDiv.classList.add('success')
-
-				form.reset()
+				form.reset() 
 			} else {
-				messageDiv.textContent = 'Error: ' + response.statusText
+				const errorText = await response.text() 
+				messageDiv.textContent = `Error: ${response.status} - ${errorText}`
 				messageDiv.classList.remove('hidden', 'success')
 				messageDiv.classList.add('error')
 			}
@@ -41,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			messageDiv.textContent = 'Error sending message. Please check your network connection.'
 			messageDiv.classList.remove('hidden', 'success')
 			messageDiv.classList.add('error')
+		} finally {
+			loading.classList.add('hidden') 
 		}
 	})
 })
