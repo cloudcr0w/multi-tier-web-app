@@ -7,8 +7,7 @@
     <title>CrowProject</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -31,39 +30,35 @@
             project is built using AWS services, including EC2 for hosting, S3 for static storage, and Route 53 for DNS
             management. It's designed to be simple, responsive, and demonstrate best practices in cloud infrastructure.
         </p>
-        <h3>Technologies Used:</h3>
-        <ul>
-            <li class="p3"><strong>AWS EC2</strong> – for hosting the application</li>
-            <li class="p3"><strong>AWS S3</strong> – for static file storage</li>
-            <li class="p3"><strong>AWS Route 53</strong> – for DNS management</li>
-            <li class="p3"><strong>AWS Cloudfront</strong> – for the rapid delivery of content thanks to CDN</li>
-            <li class="p3"><strong>AWS RDS</strong> – for manage a MySQL relational database</li>
-            <li class="p3"><strong>HTML & CSS</strong> – for front-end design</li>
-            <li class="p3"><strong>GitHub</strong> – for version control and project management</li>
-
+        <h2>Technologies Used:</h2>
+        <ul class="technologies-list centered">
+            <li><span class="tech-name">AWS EC2</span> – for hosting the application</li>
+            <li><span class="tech-name">AWS S3</span> – for static file storage</li>
+            <li><span class="tech-name">AWS Route 53</span> – for DNS management</li>
+            <li><span class="tech-name">AWS CloudFront</span> – for the rapid delivery of content thanks to CDN</li>
+            <li><span class="tech-name">AWS RDS</span> – for managing a MySQL relational database</li>
+            <li><span class="tech-name">HTML & CSS</span> – for front-end design</li>
+            <li><span class="tech-name">GitHub</span> – for version control and project management</li>
         </ul>
     </section>
-
-
 
     <section id="contact">
         <h2>Contact Me</h2>
         <form id="contact-form" action="#" method="POST">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" placeholder="Your Name" required>
-    
+
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="Your Email" required>
-    
+
             <label for="message">Message:</label>
             <textarea id="message" name="message" placeholder="Your Message" required></textarea>
-    
+
             <button type="submit">Send Message</button>
         </form>
         <div id="loading" class="hidden">Sending...</div>
         <div id="form-message" class="hidden"></div>
     </section>
-    
 
     <footer>
         <p>Connect with me:</p>

@@ -26,10 +26,30 @@ h2 {
 }
 
 /* Paragraph styles */
-p, #project-info ul li {
+p {
     font-size: 1.2em;
     color: #1a73e8;
     text-shadow: 1px 5px 6px rgba(8, 8, 8, 0.6);
+}
+
+/* Centered technologies list */
+.technologies-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.technologies-list li {
+    font-size: 1.2em;
+    color: #333;
+    margin: 10px 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.technologies-list .tech-name {
+    font-weight: bold;
+    color: #1a73e8;
 }
 
 /* Section containers */
@@ -38,6 +58,7 @@ p, #project-info ul li {
 #project-info {
     display: flex;
     flex-direction: column;
+	align-items: center;
     gap: 10px;
     width: 80%;
     max-width: 600px;
@@ -84,25 +105,29 @@ p, #project-info ul li {
     border-color: #1a73e8;
 }
 
+/* Button styles with gradient and shadow */
 #contact-form button {
     padding: 10px 20px;
     font-size: 1.2em;
-    background-color: #03a145;
+    background: linear-gradient(90deg, #03a145, #028c39);
     color: #fff;
     border: none;
     border-radius: 4px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #contact-form button:hover {
-    background-color: #028c39;
+    background: linear-gradient(90deg, #028c39, #026f2d);
     transform: scale(1.05);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 #contact-form button:active {
-    background-color: #026f2d;
+    background: linear-gradient(90deg, #026f2d, #024a1e);
     transform: scale(0.98);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #contact-form textarea {
