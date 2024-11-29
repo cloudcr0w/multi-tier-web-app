@@ -1,64 +1,78 @@
-document.addEventListener('DOMContentLoaded', () => {
-	const form = document.querySelector('#contact-form')
-	const messageDiv = document.querySelector('#form-message')
-	const loading = document.querySelector('#loading')
+// Backend address (adjust to your EC2 public IP address or CloudFront URL when ready)
+const backendUrl = 'http://54.174.25.230:3000/api/contact';
 
-	form.addEventListener('submit', async e => {
-		e.preventDefault()
+// Function to handle sending the contact form message
+async function sendMessage(event) {
+	event.preventDefault(); // Prevents page reload
 
-		const name = document.querySelector('#name').value.trim()
-		const email = document.querySelector('#email').value.trim()
-		const message = document.querySelector('#message').value.trim()
+	// Get form data
+	const name = document.getElementById('name').value.trim();
+	const email = document.getElementById('email').value.trim();
+	const message = document.getElementById('message').value.trim();
 
-		messageDiv.classList.add('hidden')
-		messageDiv.textContent = ''
+	// Validate form data
+	if (!name || !email || !message) {
+		showPopup('Please fill out all fields.', 'error');
+		return;
+	}
 
-		if (!name || !email || !message) {
-			messageDiv.textContent = 'All fields are required.'
-			messageDiv.classList.remove('hidden', 'success')
-			messageDiv.classList.add('error')
-			return
+	// Elements for handling messages and loading
+	const loading = document.getElementById('loading');
+	const formMessage = document.getElementById('form-message');
+
+	// Show loading indicator
+	loading.classList.remove('hidden');
+	formMessage.classList.add('hidden');
+
+	try {
+		// Send data to the backend
+		const response = await fetch(backendUrl, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ name, email, message }),
+		});
+
+		// Handle response from the backend
+		if (response.ok) {
+			showPopup('Message sent successfully!', 'success');
+			clearForm(); // Clear the form fields
+		} else {
+			const errorData = await response.json();
+			showPopup(`Error: ${errorData.error || 'Failed to send message'}`, 'error');
 		}
+	} catch (error) {
+		// Handle errors during sending
+		console.error('Error sending message:', error);
+		showPopup('An error occurred. Please try again later.', 'error');
+	} finally {
+		// Hide loading indicator
+		loading.classList.add('hidden');
+	}
+}
 
-		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-			messageDiv.textContent = 'Please enter a valid email address.'
-			messageDiv.classList.remove('hidden', 'success')
-			messageDiv.classList.add('error')
-			return
-		}
+// Function to display a popup message
+function showPopup(message, type) {
+	const popup = document.createElement('div');
+	popup.className = `popup ${type}`;
+	popup.textContent = message;
 
-		try {
-			loading.classList.remove('hidden')
+	// Add the popup to the DOM
+	document.body.appendChild(popup);
 
-			const response = await fetch('https://api.crow-project.click/contact', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ name, email, message }),
-				mode: 'cors',
-			})
+	// Automatically remove the popup after 3 seconds
+	setTimeout(() => {
+		popup.remove();
+	}, 3000);
+}
 
-			if (response.ok) {
-				const responseData = await response.text()
-				messageDiv.textContent = 'Message sent successfully!'
-				messageDiv.classList.remove('hidden', 'error')
-				messageDiv.classList.add('success')
-				form.reset()
-			} else {
-				const errorText = await response.text()
-				messageDiv.textContent = `Error: ${response.status} - ${errorText}`
-				messageDiv.classList.remove('hidden', 'success')
-				messageDiv.classList.add('error')
-			}
-		} catch (err) {
-			console.error('Error:', err)
+// Function to clear form fields after a successful submission
+function clearForm() {
+	document.getElementById('name').value = '';
+	document.getElementById('email').value = '';
+	document.getElementById('message').value = '';
+}
 
-			messageDiv.textContent = 'Error sending message. Please check your network connection.'
-			messageDiv.classList.remove('hidden', 'success')
-			messageDiv.classList.add('error')
-		} finally {
-			loading.classList.add('hidden')
-		}
-	})
-})
+// Add event listener for form submission
+document.getElementById('contact-form').addEventListener('submit', sendMessage);

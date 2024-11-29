@@ -1,242 +1,287 @@
 /* Global styles */
 body {
-    font-family: 'Roboto', sans-serif;
-    background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(27, 28, 28, 1) 100%);
-    color: #333;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+	font-family: 'Roboto', sans-serif;
+	background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(27, 28, 28, 1) 100%);
+	color: #333;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
 }
 
 /* Header styles */
 header h1 {
-    font-size: 2em;
-    color: #03a145;
-    margin-top: 20px;
-    text-shadow: 3px 4px 4px rgba(0, 0, 0, 0.6);
+	font-size: 2em;
+	color: #03a145;
+	margin-top: 20px;
+	text-shadow: 3px 4px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* Section titles */
 h2 {
-    font-size: 1.5em;
-    color: #1e1e1e;
-    text-shadow: 1px 5px 6px rgba(122, 121, 121, 0.6);
+	font-size: 1.5em;
+	color: #1e1e1e;
+	text-shadow: 1px 5px 6px rgba(122, 121, 121, 0.6);
 }
 
 /* Paragraph styles */
 p {
-    font-size: 1.2em;
-    color: #1a73e8;
-    text-shadow: 1px 5px 6px rgba(8, 8, 8, 0.6);
+	font-size: 1.2em;
+	color: #1a73e8;
+	text-shadow: 1px 5px 6px rgba(8, 8, 8, 0.6);
 }
 
 /* Centered technologies list */
 .technologies-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 auto;
-    text-align: center;
+	list-style: none;
+	padding: 0;
+	margin: 0 auto;
+	text-align: center;
 }
 
 .technologies-list li {
-    font-size: 1.2em;
-    color: #333;
-    margin: 10px 0;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+	font-size: 1.2em;
+	color: #333;
+	margin: 10px 0;
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .technologies-list .tech-name {
-    font-weight: bold;
-    color: #1a73e8;
+	font-weight: bold;
+	color: #1a73e8;
 }
 
 /* Section containers */
 #about,
 #contact,
 #project-info {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 	align-items: center;
-    gap: 10px;
-    width: 80%;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	gap: 10px;
+	width: 80%;
+	max-width: 600px;
+	margin: 20px auto;
+	padding: 20px;
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Contact form styles */
 #contact-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	width: 100%;
+	padding: 20px;
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #contact-form label {
-    font-size: 1.1em;
-    color: #333;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+	font-size: 1.1em;
+	color: #333;
+	font-weight: bold;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 #contact-form input,
 #contact-form textarea {
-    padding: 10px;
-    font-size: 1em;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    width: 100%;
-    transition: border-color 0.3s ease-in-out;
-    outline: none;
+	padding: 10px;
+	font-size: 1em;
+	border: 2px solid #ddd;
+	border-radius: 4px;
+	width: 100%;
+	transition: border-color 0.3s ease-in-out;
+	outline: none;
 }
 
 #contact-form input:focus,
 #contact-form textarea:focus {
-    border-color: #1a73e8;
+	border-color: #1a73e8;
 }
 
 /* Button styles with gradient and shadow */
 #contact-form button {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    background: linear-gradient(90deg, #03a145, #028c39);
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+	padding: 10px 20px;
+	font-size: 1.2em;
+	background: linear-gradient(90deg, #03a145, #028c39);
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+	transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #contact-form button:hover {
-    background: linear-gradient(90deg, #028c39, #026f2d);
-    transform: scale(1.05);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+	background: linear-gradient(90deg, #028c39, #026f2d);
+	transform: scale(1.05);
+	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 #contact-form button:active {
-    background: linear-gradient(90deg, #026f2d, #024a1e);
-    transform: scale(0.98);
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(90deg, #026f2d, #024a1e);
+	transform: scale(0.98);
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #contact-form textarea {
-    min-height: 100px;
-    resize: vertical;
+	min-height: 100px;
+	resize: vertical;
 }
 
 /* Loader and form messages */
 .hidden {
-    display: none;
+	display: none;
 }
 
 #loading {
-    display: none;
-    text-align: center;
-    font-size: 1.2rem;
-    color: #007bff;
+	display: none;
+	text-align: center;
+	font-size: 1.2rem;
+	color: #007bff;
+	font-weight: bold;
 }
 
 #form-message {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 1rem;
-    display: none;
+	margin-top: 15px;
+	padding: 10px;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 1rem;
+	display: none;
 }
 
 #form-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+	background-color: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
 }
 
 #form-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+	background-color: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+}
+
+/* Popup styles for dynamic notifications */
+.popup {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background-color: #f0f8ff;
+	color: #333;
+	padding: 10px 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+	z-index: 1000;
+	font-size: 14px;
+	animation: fadeInOut 3s ease-in-out;
+}
+
+.popup.success {
+	background-color: #d4edda;
+	color: #155724;
+}
+
+.popup.error {
+	background-color: #f8d7da;
+	color: #721c24;
+}
+
+@keyframes fadeInOut {
+	0% {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	10% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	90% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(20px);
+	}
 }
 
 /* Placeholder styles */
 #contact-form input::placeholder,
 #contact-form textarea::placeholder {
-    color: #888;
-    font-style: italic;
+	color: #888;
+	font-style: italic;
 }
 
 #contact-form input::-webkit-input-placeholder,
 #contact-form textarea::-webkit-input-placeholder {
-    color: #888;
-    font-style: italic;
+	color: #888;
+	font-style: italic;
 }
 
 /* Footer styles */
 footer {
-    color: #fff;
-    margin-top: 20px;
+	color: #fff;
+	margin-top: 20px;
 }
 
 footer a {
-    color: #ffd700;
-    text-decoration: none;
-    transition: color 0.6s ease, text-shadow 0.6s ease;
-    text-shadow: 3px 4px 4px rgba(0, 0, 0, 0.6);
+	color: #ffd700;
+	text-decoration: none;
+	transition: color 0.6s ease, text-shadow 0.6s ease;
+	text-shadow: 3px 4px 4px rgba(0, 0, 0, 0.6);
 }
 
 footer a:hover {
-    color: #5d72f9;
-    text-decoration: underline;
+	color: #5d72f9;
+	text-decoration: underline;
 }
 
 /* Animations */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 section {
-    opacity: 0;
-    animation: fadeIn 1s ease-in-out forwards;
+	opacity: 0;
+	animation: fadeIn 1s ease-in-out forwards;
 }
 
 #about {
-    animation-delay: 0.5s;
+	animation-delay: 0.5s;
 }
 
 #contact {
-    animation-delay: 1s;
+	animation-delay: 1s;
 }
 
 #project-info {
-    animation-delay: 1.5s;
+	animation-delay: 1.5s;
 }
 
 /* Responsiveness */
 @media (max-width: 768px) {
-    #contact-form {
-        width: 95%;
-        padding: 15px;
-    }
+	#contact-form {
+		width: 95%;
+		padding: 15px;
+	}
 
-    footer a {
-        text-shadow: none;
-        font-size: 0.9em;
-    }
+	footer a {
+		text-shadow: none;
+		font-size: 0.9em;
+	}
 }
