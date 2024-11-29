@@ -21,6 +21,7 @@ header h1 {
 /* Section titles */
 h2 {
 	font-size: 1.5em;
+    font-style: italic;
 	color: #1e1e1e;
 	text-shadow: 1px 5px 6px rgba(122, 121, 121, 0.6);
 }
@@ -29,7 +30,7 @@ h2 {
 p {
 	font-size: 1.2em;
 	color: #1a73e8;
-	text-shadow: 1px 5px 6px rgba(8, 8, 8, 0.6);
+	text-shadow: 1px 5px 6px rgba(8, 8, 8, 0.321);
 }
 
 /* Centered technologies list */
@@ -68,7 +69,23 @@ p {
 	border-radius: 8px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
+#badge-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	background-color: #fff;
+	border: 2px solid #ddd;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	max-width: 180px;
+	margin-top: 15px;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#badge-container:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 /* Contact form styles */
 #contact-form {
 	display: flex;

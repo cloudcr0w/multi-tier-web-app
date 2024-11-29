@@ -1,5 +1,5 @@
 // Backend address (adjust to your EC2 public IP address or CloudFront URL when ready)
-const backendUrl = 'http://54.174.25.230:3000/api/contact';
+const backendUrl = 'https://d34d0xv55dvwew.cloudfront.net/api/contact';
 
 // Function to handle sending the contact form message
 async function sendMessage(event) {
