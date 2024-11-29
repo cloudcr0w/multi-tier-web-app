@@ -7,10 +7,12 @@ const fs = require('fs')
 require('dotenv').config() // Load environment variables
 
 // Middleware
-app.use(cors())
 app.use(bodyParser.json())
 
-// Database connection configuration for RDS with environment variables
+// CORS configuration
+app.use(cors())
+
+// Database connection configuration for RDS
 const db = mysql.createConnection({
 	host: process.env.DB_HOST,
 	user: process.env.DB_USER,

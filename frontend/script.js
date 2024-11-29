@@ -1,77 +1,99 @@
-// Backend address (adjust to your EC2 public IP address or CloudFront URL when ready)
+// Wait for the DOM to load
+document.addEventListener('DOMContentLoaded', () => {
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const mainContent = document.getElementById('main-content');
+    const welcomeButton = document.getElementById('welcome-button');
+
+    // Handle click on the welcome button
+    welcomeButton.addEventListener('click', () => {
+        // Hide the welcome screen
+        welcomeScreen.classList.add('hidden');
+
+        // Display the main content after the transition
+        setTimeout(() => {
+            welcomeScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            mainContent.classList.add('fade-in');
+        }, 500); // Match the CSS transition duration
+    });
+});
+
+// Backend API endpoint
 const backendUrl = 'https://d34d0xv55dvwew.cloudfront.net/api/contact';
 
-// Function to handle sending the contact form message
+// Handle form submission
 async function sendMessage(event) {
-	event.preventDefault(); // Prevents page reload
+    event.preventDefault(); // Prevent default form submission behavior
 
-	// Get form data
-	const name = document.getElementById('name').value.trim();
-	const email = document.getElementById('email').value.trim();
-	const message = document.getElementById('message').value.trim();
+    // Get input values from the form
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
 
-	// Validate form data
-	if (!name || !email || !message) {
-		showPopup('Please fill out all fields.', 'error');
-		return;
-	}
+    // Validate the inputs
+    if (!name || !email || !message) {
+        showPopup('Please fill out all fields.', 'error');
+        return;
+    }
 
-	// Elements for handling messages and loading
-	const loading = document.getElementById('loading');
-	const formMessage = document.getElementById('form-message');
+    // Show loading indicator
+    const loading = document.getElementById('loading');
+    loading.textContent = 'Sending...'; // Ensure correct text
+    loading.classList.remove('hidden');
 
-	// Show loading indicator
-	loading.classList.remove('hidden');
-	formMessage.classList.add('hidden');
+    // Hide any previous messages
+    const formMessage = document.getElementById('form-message');
+    formMessage.classList.add('hidden');
 
-	try {
-		// Send data to the backend
-		const response = await fetch(backendUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ name, email, message }),
-		});
+    try {
+        // Send form data to the backend API
+        const response = await fetch(backendUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message }),
+        });
 
-		// Handle response from the backend
-		if (response.ok) {
-			showPopup('Message sent successfully!', 'success');
-			clearForm(); // Clear the form fields
-		} else {
-			const errorData = await response.json();
-			showPopup(`Error: ${errorData.error || 'Failed to send message'}`, 'error');
-		}
-	} catch (error) {
-		// Handle errors during sending
-		console.error('Error sending message:', error);
-		showPopup('An error occurred. Please try again later.', 'error');
-	} finally {
-		// Hide loading indicator
-		loading.classList.add('hidden');
-	}
+        // Handle the response
+        if (response.ok) {
+            showPopup('Message sent successfully!', 'success');
+            clearForm();
+        } else {
+            const errorData = await response.json();
+            const errorMessage = errorData.error || 'Failed to send message';
+            showPopup(`Error: ${errorMessage}`, 'error');
+        }
+    } catch (error) {
+        // Handle network or unexpected errors
+        console.error('Error sending message:', error);
+        showPopup('A network error occurred. Please try again later.', 'error');
+    } finally {
+        // Hide the loading indicator
+        loading.classList.add('hidden');
+        loading.textContent = ''; // Reset the text
+    }
 }
 
-// Function to display a popup message
+// Show a popup message
 function showPopup(message, type) {
-	const popup = document.createElement('div');
-	popup.className = `popup ${type}`;
-	popup.textContent = message;
+    // Create a new popup element
+    const popup = document.createElement('div');
+    popup.className = `popup ${type}`;
+    popup.textContent = message;
 
-	// Add the popup to the DOM
-	document.body.appendChild(popup);
+    // Append the popup to the body
+    document.body.appendChild(popup);
 
-	// Automatically remove the popup after 3 seconds
-	setTimeout(() => {
-		popup.remove();
-	}, 3000);
+    // Remove the popup after 3 seconds
+    setTimeout(() => {
+        popup.remove();
+    }, 3000);
 }
 
-// Function to clear form fields after a successful submission
+// Clear form inputs
 function clearForm() {
-	document.getElementById('name').value = '';
-	document.getElementById('email').value = '';
-	document.getElementById('message').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('message').value = '';
 }
 
 // Add event listener for form submission
