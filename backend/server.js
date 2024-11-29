@@ -23,28 +23,26 @@ const database = mysql.createPool(dbConfig)
 app.use(express.json())
 
 // CORS configuration
-app.use(
-	cors({
-		origin: ['https://crow-project.click', 'https://www.crow-project.click'], // Dodane obie domeny
-		methods: ['GET', 'POST', 'OPTIONS'],
-		allowedHeaders: ['Content-Type', 'Authorization'],
-		credentials: true,
-	})
-)
-
-// Security headers
 app.use((req, res, next) => {
-	res.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
-	res.header('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self';")
-	res.header('X-Content-Type-Options', 'nosniff')
-	res.header('X-Frame-Options', 'DENY')
-	res.header('Referrer-Policy', 'no-referrer')
-	next()
-})
+    res.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.header(
+        'Content-Security-Policy',
+        "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.crow-project.click;"
+    );
+    res.header('X-Content-Type-Options', 'nosniff');
+    res.header('X-Frame-Options', 'DENY');
+    res.header('Referrer-Policy', 'no-referrer');
+    next();
+});
 
-// OPTIONS preflight handling
+
+// OPTIONS preflight request handling
 app.options('*', (req, res) => {
-	res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://crow-project.click')
+	res.header(
+		'Access-Control-Allow-Origin',
+		req.headers.origin || 'https://crow-project.click',
+		'https://www.crow-project.click'
+	)
 	res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
 	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 	res.sendStatus(204)
@@ -82,7 +80,7 @@ app.post('/contact', (req, res) => {
 	})
 })
 
-// HTTPS server
+// HTTPS server configuration
 const options = {
 	key: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/privkey.pem'),
 	cert: fs.readFileSync('/etc/letsencrypt/live/api.crow-project.click/fullchain.pem'),

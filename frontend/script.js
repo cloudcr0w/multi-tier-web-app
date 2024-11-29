@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		try {
-			loading.classList.remove('hidden') 
+			loading.classList.remove('hidden')
 
 			const response = await fetch('https://api.crow-project.click/contact', {
 				method: 'POST',
@@ -36,16 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ name, email, message }),
+				mode: 'cors',
 			})
 
 			if (response.ok) {
-				const responseData = await response.text() 
+				const responseData = await response.text()
 				messageDiv.textContent = 'Message sent successfully!'
 				messageDiv.classList.remove('hidden', 'error')
 				messageDiv.classList.add('success')
-				form.reset() 
+				form.reset()
 			} else {
-				const errorText = await response.text() 
+				const errorText = await response.text()
 				messageDiv.textContent = `Error: ${response.status} - ${errorText}`
 				messageDiv.classList.remove('hidden', 'success')
 				messageDiv.classList.add('error')
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			messageDiv.classList.remove('hidden', 'success')
 			messageDiv.classList.add('error')
 		} finally {
-			loading.classList.add('hidden') 
+			loading.classList.add('hidden')
 		}
 	})
 })
