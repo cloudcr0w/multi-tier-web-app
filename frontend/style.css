@@ -317,3 +317,61 @@ footer p #current-year {
     font-weight: bold;
     color: #b4b91f;
 }
+/* General Popup Styles */
+.popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: popupFadeIn 0.5s forwards;
+}
+
+/* Popup fade-in animation */
+@keyframes popupFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Success Popup */
+.popup.success {
+    background-color: #4CAF50; /* Green */
+}
+
+/* Error Popup */
+.popup.error {
+    background-color: #F44336; /* Red */
+}
+
+/* Popup closing animation */
+@keyframes popupFadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
+/* Add a smooth fade-out effect when the popup disappears */
+.popup.removing {
+    animation: popupFadeOut 0.5s forwards;
+}
