@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500); // Match the CSS transition duration
     });
 });
+// JavaScript to set the current year
+document.getElementById('current-year').textContent = new Date().getFullYear();
 
 // Backend API endpoint
 const backendUrl = 'https://d34d0xv55dvwew.cloudfront.net/api/contact';
