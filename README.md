@@ -59,6 +59,3 @@ This project is a portfolio application designed to showcase a multi-tier archit
 ---
 
 This project highlights my ability to design and deploy cloud-based web applications and serves as a showcase of my skills in cloud computing, backend development, and AWS services.
-
-
-Stay tuned for updates as I complete the project!
