@@ -333,8 +333,8 @@ footer p #current-year {
     width: 90%;
     max-width: 400px;
     text-align: center;
-    z-index: 1000;
-    opacity: 0;
+    z-index: 9999;
+    opacity: 1;
     animation: popupFadeIn 0.5s forwards;
 }
 
@@ -352,7 +352,7 @@ footer p #current-year {
 
 /* Success Popup */
 .popup.success {
-    background-color: #4CAF50; /* Green */
+    background-color: #067a0a; /* Green */
 }
 
 /* Error Popup */
