@@ -2,6 +2,7 @@
 
 This project is a portfolio application designed to showcase a multi-tier architecture using AWS. The backend is built with Node.js and Express, and the entire application is deployed on AWS Cloud Infrastructure, utilizing services like EC2, S3, CloudFront, Route 53, and RDS.
 
+
 ## Features
 
 - **Backend**: RESTful API built with Node.js and Express.
@@ -42,6 +43,8 @@ This project is a portfolio application designed to showcase a multi-tier archit
 - **AWS Route 53**: Domain registration and DNS management.
 - **AWS RDS**: Managed MySQL database service.
 - **AWS ACM**: SSL certificate for secure HTTPS connections.
+- **AWS Cloudwatch** - To monitor application performance and ensure high availability :construction:
+- **AWS KMS** - Added encryption for bucket :construction:
 - **GitHub**: Version control and collaboration.
 
 ## Usage
