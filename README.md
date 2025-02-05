@@ -11,7 +11,7 @@ This project is a portfolio application designed to showcase a multi-tier archit
 - **Domain**: Custom domain integrated with Route 53 for DNS management.
 - **CDN**: CloudFront for fast and secure content delivery.
 - **Security**: End-to-end encryption with SSL certificates provided by AWS Certificate Manager (ACM).
-
+- :construction: **AWS WAF (Web Application Firewall)** , **AWS CloudFormation** , **GitHub Actions / AWS CodePipeline** :construction: 
 ## Architecture diagram
 
 
