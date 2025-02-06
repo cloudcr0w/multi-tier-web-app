@@ -6,7 +6,7 @@ body {
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
-	color: #333;
+	color: #3a3939;
 	background: linear-gradient(120deg, #0d1b2a, #1b263b, #234264, #1b263b, #0d1b2a);
 	background-size: 300% 300%;
 	animation: smoothDarkGradient 20s infinite linear;
