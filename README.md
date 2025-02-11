@@ -80,7 +80,31 @@ This project is a portfolio application designed to showcase a multi-tier archit
 3. **Explore the Code**  
    Browse this repository for a deeper look into the Node.js/Express backend, database setup, and infrastructure components.
 
----
+4. ## CloudFormation Demo
+
+As part of demonstrating Infrastructure as Code (IaC), this repository includes a simple CloudFormation template:
+
+- **Location**: [`infrastructure/cloudformation/demo-infra.yml`](infrastructure/cloudformation/demo-infra.yml)  
+- **Purpose**: Creates a demo S3 bucket for hosting static content.
+
+### How to Deploy
+
+1. Make sure you have the AWS CLI installed and configured.  
+2. Run the following command from the project's root directory:
+
+```bash
+aws cloudformation create-stack \
+  --stack-name demo-infra-stack \
+  --template-body file://infrastructure/cloudformation/demo-infra.yml \
+  --capabilities CAPABILITY_NAMED_IAM 
+  ```
+3. Wait for the stack to reach the CREATE_COMPLETE status (check in AWS Console or via CLI).
+You can then verify that the bucket is created in your AWS S3 console.
+If you want to remove the bucket afterward, delete the stack:
+
+```bash
+aws cloudformation delete-stack --stack-name demo-infra-stack
+```
 
 ## Project Goals
 
