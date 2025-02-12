@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Demo stack to project, creates simple S3
+
+Resources:
+  DemoBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "demo-infra-bucket-${AWS::AccountId}"
+      AccessControl: PublicRead
+      # only for preview
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+Outputs:
+  DemoBucketName:
+    Description: Name of the bucket
+    Value: !Ref DemoBucket

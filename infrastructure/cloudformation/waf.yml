@@ -1,5 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
+<<<<<<< HEAD
 Description: AWS WAF WebACL for CloudFront distribution
+=======
+Description: AWS WAF WebACL for CloudFront Distribution
+>>>>>>> f76100cc1e2cef206dcffc32369134049cb7b18b
 
 Resources:
   WebACL:
