@@ -25,4 +25,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3
-        run: aws s3 sync ./build s3://my-bucket-name --delete
+        run: aws s3 sync ./build s3://crowproject-bucket --delete
+
+      - name: Create AWS Cloudfront invalidation
+        run: aws cloudfront create-invalidation --distribution-id E1MN6R9BS8CXF4 --paths "/*"
