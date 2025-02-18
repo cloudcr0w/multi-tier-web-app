@@ -5,6 +5,7 @@ Parameters:
   InstanceId:
     Description: The ID of the EC2 instance to monitor.
     Type: String
+    Default: "i-0cfc689bb03f5f9ac"
   AlarmThreshold:
     Description: CPU utilization threshold percentage to trigger the alarm.
     Type: Number
@@ -16,6 +17,7 @@ Parameters:
   SNSSubscriptionEmail:
     Description: Email address to subscribe to the SNS Topic for notifications.
     Type: String
+    Default: "adamwronowy@gmail.com"
 
 Resources:
   CPUAlarmSNSTopic:
