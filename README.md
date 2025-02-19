@@ -53,6 +53,25 @@ This project is a portfolio application designed to showcase a multi-tier archit
 - All traffic encrypted using **SSL certificates** (AWS ACM).
 - API endpoint served over **HTTPS** for secure communication.
 
+
+## CloudWatch CPU Alarm and SNS Notifications
+
+This repository includes a CloudFormation template (`infrastructure/cloudformation/cpu-alarm.yml`) to create a CloudWatch Alarm for monitoring EC2 CPU utilization and an SNS Topic for notifications.
+
+### How to Deploy
+
+To deploy the stack, run the following command (replace parameters with your values):
+
+```bash
+aws cloudformation create-stack \
+  --stack-name cpu-alarm-stack \
+  --template-body file://infrastructure/cloudformation/cpu-alarm.yml \
+  --parameters ParameterKey=InstanceId,ParameterValue=i-0cfc689bb03f5f9ac \
+               ParameterKey=AlarmThreshold,ParameterValue=80 \
+               ParameterKey=EvaluationPeriods,ParameterValue=1 \
+               ParameterKey=SNSSubscriptionEmail,ParameterValue=adamwronowy@gmail.com \
+  --capabilities CAPABILITY_NAMED_IAM
+```
 ---
 
 ## Services Used
