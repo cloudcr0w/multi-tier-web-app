@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation Template for CloudFront Distribution for the static website hosted in S3.
+
+Parameters:
+  BucketName:
+    Description: "The name of the S3 bucket hosting the website."
+    Type: String
+    Default: "crowproject-bucket"
+  OriginPath:
+    Description: "The origin path in the S3 bucket (e.g., /frontend)."
+    Type: String
+    Default: "/frontend"
+  DefaultRootObject:
+    Description: "The default root object for the distribution."
+    Type: String
+    Default: "index.html"
+  PriceClass:
+    Description: "Price class for the distribution (e.g., PriceClass_100, PriceClass_200, PriceClass_All)."
+    Type: String
+    Default: "PriceClass_100"
+
+Resources:
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - Id: S3Origin
+            DomainName: !Sub "${BucketName}.s3-website-${AWS::Region}.amazonaws.com"
+            OriginPath: !Ref OriginPath
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: 
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        DefaultRootObject: !Ref DefaultRootObject
+        PriceClass: !Ref PriceClass
+
+Outputs:
+  DistributionId:
+    Description: "CloudFront Distribution ID"
+    Value: !Ref CloudFrontDistribution
+  DistributionDomainName:
+    Description: "Domain name of the CloudFront distribution"
+    Value: !GetAtt CloudFrontDistribution.DomainName

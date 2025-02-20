@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation Template to create a CloudWatch Alarm for EC2 CPU Utilization and an SNS Topic for notifications.
+
+Parameters:
+  InstanceId:
+    Description: The ID of the EC2 instance to monitor.
+    Type: String
+    Default: "i-0cfc689bb03f5f9ac"
+  AlarmThreshold:
+    Description: CPU utilization threshold percentage to trigger the alarm.
+    Type: Number
+    Default: 80
+  EvaluationPeriods:
+    Description: Number of periods over which data is compared to the specified threshold.
+    Type: Number
+    Default: 1
+  SNSSubscriptionEmail:
+    Description: Email address to subscribe to the SNS Topic for notifications.
+    Type: String
+    Default: "adamwronowy@gmail.com"
+
+Resources:
+  CPUAlarmSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: "EC2 CPU Alarm Topic"
+      Subscription:
+        - Endpoint: !Ref SNSSubscriptionEmail
+          Protocol: email
+
+  CPUUtilizationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Alarm when EC2 CPU Utilization exceeds threshold"
+      Namespace: AWS/EC2
+      MetricName: CPUUtilization
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref InstanceId
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: !Ref EvaluationPeriods
+      Threshold: !Ref AlarmThreshold
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref CPUAlarmSNSTopic
+
+Outputs:
+  SNSTopicARN:
+    Description: ARN of the SNS Topic for CPU Alarm notifications.
+    Value: !Ref CPUAlarmSNSTopic
+  AlarmName:
+    Description: Name of the created CloudWatch Alarm.
+    Value: !Ref CPUUtilizationAlarm
