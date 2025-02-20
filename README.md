@@ -73,6 +73,19 @@ aws cloudformation create-stack \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 ---
+## CloudFront Distribution
+
+The `cloudfront-distribution.yml` template creates a CloudFront distribution for our static website hosted in the S3 bucket `crowproject-bucket`. It sets the origin path to `/frontend` and defines the default root object as `index.html`.
+
+To deploy, run:
+```bash
+aws cloudformation create-stack \
+  --stack-name cloudfront-stack \
+  --template-body file://infrastructure/cloudformation/cloudfront-distribution.yml \
+  --capabilities CAPABILITY_NAMED_IAM
+```
+
+
 
 ## Services Used
 
