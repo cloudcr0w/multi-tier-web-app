@@ -28,7 +28,7 @@ This project is a portfolio application designed to showcase a multi-tier archit
 
 ---
 
-## Architecture Diagram
+## Architecture Diagram :construction: soon actual version :construction:
 
 ![Architecture Diagram](./diagram.jpg)
 
@@ -85,7 +85,17 @@ aws cloudformation create-stack \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
+## Docker Containerization
 
+This project includes a Dockerfile for containerizing the backend application.
+
+### How to Build and Run Locally
+
+1. **Build the Docker image:**
+
+   ```bash
+   docker build -t my-backend-app .
+   ```
 
 ## Services Used
 
