@@ -1,0 +1,139 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template for creating an Application Load Balancer with an Auto Scaling Group for EC2 instances.
+# this is only a demo version showing my knowledge
+Parameters:
+  VpcId:
+    Description: "The ID of the VPC in which to launch the resources."
+    Type: AWS::EC2::VPC::Id
+  SubnetIds:
+    Description: "A comma-separated list of subnet IDs for ALB and ASG."
+    Type: List<AWS::EC2::Subnet::Id>
+  InstanceType:
+    Description: "EC2 instance type for the Auto Scaling Group."
+    Type: String
+    Default: t3.micro
+  KeyName:
+    Description: "Name of an existing EC2 KeyPair to enable SSH access."
+    Type: AWS::EC2::KeyPair::KeyName
+  ImageId:
+    Description: "AMI ID for the EC2 instances."
+    Type: AWS::EC2::Image::Id
+  DesiredCapacity:
+    Description: "Desired number of instances."
+    Type: Number
+    Default: 1
+  MinSize:
+    Description: "Minimum number of instances."
+    Type: Number
+    Default: 1
+  MaxSize:
+    Description: "Maximum number of instances."
+    Type: Number
+    Default: 3
+
+Resources:
+  ## Security group for the Application Load Balancer
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Security Group for ALB"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+  ## Security group for EC2 instances in ASG
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Security Group for EC2 instances"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+
+  ## Application Load Balancer
+  ApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: "my-alb"
+      Subnets: !Ref SubnetIds
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
+      Scheme: internet-facing
+      Type: application
+
+  ## Target Group for ALB (przyjmujemy, że aplikacja nasłuchuje na porcie 3000)
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: "my-target-group"
+      Port: 3000
+      Protocol: HTTP
+      VpcId: !Ref VpcId
+      TargetType: instance
+      HealthCheckEnabled: true
+      HealthCheckPath: /
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+
+  ## Listener ALB na porcie 80
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+
+  ## Launch Configuration for ASG
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref EC2SecurityGroup
+      UserData: !Base64 |
+        #!/bin/bash
+        yum update -y
+        # Przykładowa instalacja i uruchomienie aplikacji (np. Node.js)
+        # Poniżej instalacja Apache HTTP Server jako przykład
+        yum install -y httpd
+        systemctl start httpd
+        systemctl enable httpd
+
+  ## Auto Scaling Group
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: !Ref SubnetIds
+      LaunchConfigurationName: !Ref LaunchConfiguration
+      MinSize: !Ref MinSize
+      MaxSize: !Ref MaxSize
+      DesiredCapacity: !Ref DesiredCapacity
+      TargetGroupARNs:
+        - !Ref TargetGroup
+      HealthCheckType: EC2
+      HealthCheckGracePeriod: 300
+
+Outputs:
+  ALBDomainName:
+    Description: "The domain name of the Application Load Balancer"
+    Value: !GetAtt ApplicationLoadBalancer.DNSName
+  ASGName:
+    Description: "The name of the Auto Scaling Group"
+    Value: !Ref AutoScalingGroup
