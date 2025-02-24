@@ -19,5 +19,5 @@ ENV PORT=3000
 # Tell Docker that the container listens on port 3000
 EXPOSE 3000
 
-# Start the application
+# Start the app
 CMD ["npm", "start"]
