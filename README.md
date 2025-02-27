@@ -107,6 +107,7 @@ This project includes a Dockerfile for containerizing the backend application.
 - **AWS ACM** – SSL certificate for secure HTTPS connections
 - :construction: **AWS CloudWatch** – Monitoring and high availability (planned)
 - :construction: **AWS KMS** – Encryption for data at rest (planned)
+- :construction: **AWS SNS** - For notifications, when someone send message form contactform
 - **GitHub** – Version control and collaboration
 
 ---
