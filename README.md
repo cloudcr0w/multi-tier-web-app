@@ -32,6 +32,8 @@ This project is a portfolio application designed to showcase a multi-tier archit
 
 ![Architecture Diagram](./diagram.jpg)
 
+<sup>*(Update or replace `diagram.jpg` with your new diagram file, if needed.)*</sup>
+
 ### Frontend
 
 - Hosted on **AWS S3** as a static website.
@@ -52,7 +54,9 @@ This project is a portfolio application designed to showcase a multi-tier archit
 
 - All traffic encrypted using **SSL certificates** (AWS ACM).
 - API endpoint served over **HTTPS** for secure communication.
+- (Planned) Additional AWS WAF rule sets for advanced threat protection.
 
+---
 
 ## CloudWatch CPU Alarm and SNS Notifications
 
@@ -71,95 +75,92 @@ aws cloudformation create-stack \
                ParameterKey=EvaluationPeriods,ParameterValue=1 \
                ParameterKey=SNSSubscriptionEmail,ParameterValue=adamwronowy@gmail.com \
   --capabilities CAPABILITY_NAMED_IAM
-```
----
-## CloudFront Distribution
+  ```
 
-The `cloudfront-distribution.yml` template creates a CloudFront distribution for our static website hosted in the S3 bucket `crowproject-bucket`. It sets the origin path to `/frontend` and defines the default root object as `index.html`.
+### CloudFront Distribution
+The cloudfront-distribution.yml template creates a CloudFront distribution for our static website hosted in the S3 bucket crowproject-bucket. It sets the origin path to /frontend and defines the default root object as index.html.
 
 To deploy, run:
+
 ```bash
+
 aws cloudformation create-stack \
   --stack-name cloudfront-stack \
   --template-body file://infrastructure/cloudformation/cloudfront-distribution.yml \
   --capabilities CAPABILITY_NAMED_IAM
-```
-
-## Docker Containerization
-
+  ```
+### Docker Containerization
 This project includes a Dockerfile for containerizing the backend application.
 
-### How to Build and Run Locally
-
-1. **Build the Docker image:**
-
-   ```bash
-   docker build -t my-backend-app .
-   ```
-
-## Services Used
-
-- **AWS EC2** – Hosting the backend application
-- **AWS S3** – Storing and serving static assets for the frontend
-- **AWS CloudFront** – Content Delivery Network for fast, global access
-- **AWS Route 53** – Domain registration and DNS management
-- **AWS RDS** (MySQL) – Managed relational database service
-- **AWS ACM** – SSL certificate for secure HTTPS connections
-- :construction: **AWS CloudWatch** – Monitoring and high availability (planned)
-- :construction: **AWS KMS** – Encryption for data at rest (planned)
-- :construction: **AWS SNS** - For notifications, when someone send message form contactform
-- **GitHub** – Version control and collaboration
-
----
-
-## Usage
-
-1. **Visit the Website**  
-   The application is live at [https://crow-project.click](https://crow-project.click).
-
-2. **Try the Contact Form**  
-   Submit a message through the form, which will be securely stored in the MySQL database.
-
-3. **Explore the Code**  
-   Browse this repository for a deeper look into the Node.js/Express backend, database setup, and infrastructure components.
-
-4. ## CloudFormation Demo
-
-As part of demonstrating Infrastructure as Code (IaC), this repository includes a simple CloudFormation template:
-
-- **Location**: [`infrastructure/cloudformation/demo-infra.yml`](infrastructure/cloudformation/demo-infra.yml)  
-- **Purpose**: Creates a demo S3 bucket for hosting static content.
-
-### How to Deploy
-
-1. Make sure you have the AWS CLI installed and configured.  
-2. Run the following command from the project's root directory:
+How to Build and Run Locally
+Build the Docker image:
 
 ```bash
+docker build -t my-backend-app .
+docker run -p 3000:3000 my-backend-app
+```
+Your application should now be accessible at http://localhost:3000
+
+### CloudFormation Demo
+As part of demonstrating Infrastructure as Code (IaC), this repository includes a simple CloudFormation template:
+
+Location: infrastructure/cloudformation/demo-infra.yml
+Purpose: Creates a demo S3 bucket for hosting static content.
+How to Deploy
+Make sure you have the AWS CLI installed and configured.
+Run the following command from the project's root directory:
+```bash
+
 aws cloudformation create-stack \
   --stack-name demo-infra-stack \
   --template-body file://infrastructure/cloudformation/demo-infra.yml \
-  --capabilities CAPABILITY_NAMED_IAM 
+  --capabilities CAPABILITY_NAMED_IAM
   ```
-3. Wait for the stack to reach the CREATE_COMPLETE status (check in AWS Console or via CLI).
+
+Wait for the stack to reach the CREATE_COMPLETE status (check in AWS Console or via CLI).
 You can then verify that the bucket is created in your AWS S3 console.
 If you want to remove the bucket afterward, delete the stack:
 
 ```bash
+Kopiuj
 aws cloudformation delete-stack --stack-name demo-infra-stack
 ```
+## Services Used ##
+## AWS EC2 ## – Hosting the backend application
+## AWS S3 ##– Storing and serving static assets for the frontend
+## AWS CloudFront ## – Content Delivery Network for fast, global access
+## AWS Route 53 ## – Domain registration and DNS management
+## AWS RDS (MySQL) ## – Managed relational database service
+## AWS ACM ## – SSL certificate for secure HTTPS connections
+## :construction: AWS CloudWatch ## – Monitoring and high availability (planned)
+## :construction: AWS KMS ## – Encryption for data at rest (planned)
+## :construction: AWS SNS ## – Notifications for CPU alarms or form submissions (planned)
+## GitHub ## – Version control and collaboration
 
-## Project Goals
+### Usage
+Visit the Website
+The application is live at https://crow-project.click.
 
-- **Demonstrate a Multi-Tier Architecture**  
-  Show how various AWS services integrate to create a secure and scalable web application.
+Try the Contact Form
+Submit a message through the form, which will be securely stored in the MySQL database.
 
-- **Highlight Cloud & Backend Skills**  
-  Emphasize experience in Node.js, AWS services, and cloud-based deployments.
+Explore the Code
+Browse this repository for a deeper look into the Node.js/Express backend, database setup, and infrastructure components.
 
-- **End-to-End Integration**  
-  Illustrate how a custom domain, SSL, CDN, and database come together for a production-ready setup.
+Project Goals
+Demonstrate a Multi-Tier Architecture
+Show how various AWS services integrate to create a secure and scalable web application.
 
----
+Highlight Cloud & Backend Skills
+Emphasize experience in Node.js, AWS services, and cloud-based deployments.
 
-This project demonstrates my ability to design, build, and deploy cloud-based applications. It serves as a comprehensive showcase of my skills in **cloud computing**, **backend development**, and **AWS services**.
+End-to-End Integration
+Illustrate how a custom domain, SSL, CDN, and database come together for a production-ready setup.
+
+Future Improvements
+Auto Scaling & ALB: Add an Application Load Balancer and Auto Scaling Group for the backend.
+CI/CD Pipeline: Implement GitHub Actions or AWS CodePipeline for automated builds and deployments.
+Secrets Management: Store credentials in AWS Secrets Manager or Parameter Store.
+Extended WAF Rules: Integrate AWS Managed Rule Groups for advanced threat protection.
+ECS / EKS: Deploy containers in AWS Fargate or Kubernetes for highly scalable environments.
+This project demonstrates my ability to design, build, and deploy cloud-based applications. It serves as a comprehensive showcase of my skills in cloud computing, backend development, and AWS services.
