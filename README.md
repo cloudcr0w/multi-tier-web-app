@@ -32,7 +32,7 @@ This project is a portfolio application designed to showcase a multi-tier archit
 
 ![Architecture Diagram](./diagram.jpg)
 
-<sup>*(Update or replace `diagram.jpg` with your new diagram file, if needed.)*</sup>
+
 
 ### Frontend
 
@@ -122,22 +122,22 @@ You can then verify that the bucket is created in your AWS S3 console.
 If you want to remove the bucket afterward, delete the stack:
 
 ```bash
-Kopiuj
 aws cloudformation delete-stack --stack-name demo-infra-stack
 ```
-## Services Used ##
-## AWS EC2 ## – Hosting the backend application
-## AWS S3 ##– Storing and serving static assets for the frontend
-## AWS CloudFront ## – Content Delivery Network for fast, global access
-## AWS Route 53 ## – Domain registration and DNS management
-## AWS RDS (MySQL) ## – Managed relational database service
-## AWS ACM ## – SSL certificate for secure HTTPS connections
-## :construction: AWS CloudWatch ## – Monitoring and high availability (planned)
-## :construction: AWS KMS ## – Encryption for data at rest (planned)
-## :construction: AWS SNS ## – Notifications for CPU alarms or form submissions (planned)
-## GitHub ## – Version control and collaboration
 
-### Usage
+## Services Used  
+### AWS EC2  – Hosting the backend application
+### AWS S3  – Storing and serving static assets for the frontend
+### AWS CloudFront  – Content Delivery Network for fast, global access
+### AWS Route 53  – Domain registration and DNS management
+### AWS RDS (MySQL)  – Managed relational database service
+### AWS ACM  – SSL certificate for secure HTTPS connections
+### :construction: AWS CloudWatch  – Monitoring and high availability (planned)
+### :construction: AWS KMS  – Encryption for data at rest (planned)
+### :construction: AWS SNS  – Notifications for CPU alarms or form submissions (planned)
+### GitHub  – Version control and collaboration
+
+### Usage ###
 Visit the Website
 The application is live at https://crow-project.click.
 
@@ -157,10 +157,18 @@ Emphasize experience in Node.js, AWS services, and cloud-based deployments.
 End-to-End Integration
 Illustrate how a custom domain, SSL, CDN, and database come together for a production-ready setup.
 
+
+
 Future Improvements
+
 Auto Scaling & ALB: Add an Application Load Balancer and Auto Scaling Group for the backend.
+
 CI/CD Pipeline: Implement GitHub Actions or AWS CodePipeline for automated builds and deployments.
+
 Secrets Management: Store credentials in AWS Secrets Manager or Parameter Store.
+
 Extended WAF Rules: Integrate AWS Managed Rule Groups for advanced threat protection.
+
 ECS / EKS: Deploy containers in AWS Fargate or Kubernetes for highly scalable environments.
+
 This project demonstrates my ability to design, build, and deploy cloud-based applications. It serves as a comprehensive showcase of my skills in cloud computing, backend development, and AWS services.
