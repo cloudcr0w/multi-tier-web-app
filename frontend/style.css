@@ -193,7 +193,6 @@ section p {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	font-family: 'Roboto', sans-serif;
 	gap: 15px;
 	width: 100%;
 	padding: 5px;
@@ -205,6 +204,7 @@ section p {
 #contact-form textarea {
 	padding: 10px;
 	font-size: 1em;
+	font-family: 'Roboto', sans-serif;
 	border: 2px solid #ddd;
 	border-radius: 4px;
 	width: 100%;
