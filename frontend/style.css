@@ -132,7 +132,7 @@ section {
 	opacity: 0;
 	animation: fade-in 1.5s ease-in-out forwards;
 	font-family: 'Poppins', sans-serif;
-	color: #333;
+	color: #555;
 }
 
 section h2 {
@@ -328,7 +328,7 @@ footer p #current-year {
 	top: 20px;
 	left: 50%;
 	transform: translateX(-50%);
-	background-color: #333;
+	background-color: #555;
 	color: white;
 	padding: 20px;
 	border-radius: 8px;
