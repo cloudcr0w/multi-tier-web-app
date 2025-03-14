@@ -181,11 +181,15 @@ section p {
 #project-info {
 	animation-delay: 1.5s;
 }
-#project-info-second {
-    animation-delay: 2.5s;
+#project-info-serverless {
+	animation-delay: 2.5s;
 }
+#project-info-weather {
+    animation-delay: 3.5s;
+}
+
 #contact {
-	animation-delay: 3s;
+	animation-delay: 4.5s;
 }
 
 /* Contact form styles */
