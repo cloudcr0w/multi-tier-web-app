@@ -23,6 +23,23 @@ document.getElementById('current-year').textContent = new Date().getFullYear()
 // Backend API endpoint
 const backendUrl = 'https://d34d0xv55dvwew.cloudfront.net/api/contact'
 
+
+
+// scroll-up button
+const scrollTopBtn = document.getElementById('scroll-top-btn')
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+        scrollTopBtn.style.display = 'block'
+    } else {
+        scrollTopBtn.style.display = 'none'
+    }
+})
+
+scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+})
+
 // Handle form submission
 async function sendMessage(event) {
 	event.preventDefault() // Prevent default form submission behavior
