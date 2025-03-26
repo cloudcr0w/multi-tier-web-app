@@ -71,61 +71,56 @@ body {
 }
 /*scroll button style*/
 #scroll-top-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    background: linear-gradient(45deg, #10b981, #0284c7); 
-    background-size: 200% 200%;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0, 255, 128, 0.4);
-    display: none;
-    transition: background 0.8s ease-in-out, transform 0.2s, box-shadow 0.3s;
-    z-index: 1000; 
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	padding: 12px 20px;
+	background: linear-gradient(45deg, #10b981, #0284c7);
+	background-size: 200% 200%;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: bold;
+	box-shadow: 0 4px 10px rgba(0, 255, 128, 0.4);
+	display: none;
+	transition: background 0.8s ease-in-out, transform 0.2s, box-shadow 0.3s;
+	z-index: 1000;
 }
 
 #scroll-top-btn:hover {
-    background: linear-gradient(45deg, #f59e0b, #ea580c);
-    transform: scale(1.1);
-    box-shadow: 0 6px 14px rgba(255, 115, 0, 0.6);
+	background: linear-gradient(45deg, #f59e0b, #ea580c);
+	transform: scale(1.1);
+	box-shadow: 0 6px 14px rgba(255, 115, 0, 0.6);
 }
-
 
 @media (max-width: 1024px) {
-    #scroll-top-btn {
-        padding: 10px 16px;
-        font-size: 14px;
-        bottom: 15px;
-        right: 15px;
-    }
+	#scroll-top-btn {
+		padding: 10px 16px;
+		font-size: 14px;
+		bottom: 15px;
+		right: 15px;
+	}
 }
-
 
 @media (max-width: 768px) {
-    #scroll-top-btn {
-        padding: 8px 14px;
-        font-size: 12px;
-        bottom: 10px;
-        right: 10px;
-    }
+	#scroll-top-btn {
+		padding: 8px 14px;
+		font-size: 12px;
+		bottom: 10px;
+		right: 10px;
+	}
 }
-
 
 @media (max-width: 480px) {
-    #scroll-top-btn {
-        padding: 6px 12px;
-        font-size: 10px;
-        bottom: 8px;
-        right: 8px;
-    }
+	#scroll-top-btn {
+		padding: 6px 12px;
+		font-size: 10px;
+		bottom: 8px;
+		right: 8px;
+	}
 }
-
-
 
 /* Heading styles */
 h1.text-focus-in,
@@ -238,15 +233,18 @@ section p {
 #project-info {
 	animation-delay: 1.5s;
 }
-#project-info-serverless {
+#project-info-security {
 	animation-delay: 2.5s;
 }
+#project-info-serverless {
+	animation-delay: 3.5s;
+}
 #project-info-weather {
-    animation-delay: 3.5s;
+	animation-delay: 4.5s;
 }
 
 #contact {
-	animation-delay: 4.5s;
+	animation-delay: 5.5s;
 }
 
 /* Contact form styles */
