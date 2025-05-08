@@ -120,3 +120,15 @@ function clearForm() {
 
 // Add event listener for form submission
 document.getElementById('contact-form').addEventListener('submit', sendMessage)
+
+// Toggle visibility with smooth transition
+document.querySelectorAll('.toggle-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const project = button.closest('.project')
+        const details = project.querySelector('.project-details')
+        const isExpanded = details.classList.contains('expanded')
+
+        details.classList.toggle('expanded')
+        button.textContent = isExpanded ? 'Show More ⬇️' : 'Show Less ⬆️'
+    })
+})

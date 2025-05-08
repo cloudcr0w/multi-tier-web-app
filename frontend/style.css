@@ -123,6 +123,70 @@ body {
 }
 
 /* Heading styles */
+
+
+@keyframes textFocusIn {
+    0% {
+        filter: blur(8px);
+        opacity: 0;
+        transform: scale(1.1);
+    }
+    100% {
+        filter: blur(0);
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+@keyframes softPulse {
+    0%, 100% {
+        text-shadow: 0 0 4px rgba(0, 255, 255, 0.1);
+    }
+    50% {
+        text-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+    }
+}
+
+
+h1.text-focus-in,
+h2.text-focus-in {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    text-align: center;
+    background: linear-gradient(90deg, #0077a6, #00bfa6, #0077a6);
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+
+    animation: textFocusIn 1.2s ease-out both, softPulse 6s infinite ease-in-out;
+}
+
+.name-highlight {
+	background: linear-gradient(90deg, #00e0ff, #00c896);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	font-family: 'Bebas Neue', sans-serif;
+	letter-spacing: 2px;
+  }
+  
+
+@keyframes soft-pulse {
+    0% {
+        text-shadow: 0 0 4px rgba(0, 255, 255, 0.15);
+    }
+    50% {
+        text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    }
+    100% {
+        text-shadow: 0 0 4px rgba(0, 255, 255, 0.15);
+    }
+}
+
+
 h1.text-focus-in,
 h2.text-focus-in {
 	font-size: 3rem;
@@ -236,15 +300,19 @@ section p {
 #project-info-security {
 	animation-delay: 2.5s;
 }
-#project-info-serverless {
+#project-info-sentiment {
 	animation-delay: 3.5s;
 }
-#project-info-weather {
+
+#project-info-serverless {
 	animation-delay: 4.5s;
+}
+#project-info-weather {
+	animation-delay: 5.5s;
 }
 
 #contact {
-	animation-delay: 5.5s;
+	animation-delay: 6.5s;
 }
 
 /* Contact form styles */
@@ -438,4 +506,49 @@ footer p #current-year {
 /* Add a smooth fade-out effect when the popup disappears */
 .popup.removing {
 	animation: popupFadeOut 0.5s forwards;
+}
+.project {
+    margin-bottom: 40px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    overflow: hidden;
+}
+
+.project-header {
+    text-align: center;
+    position: relative;
+}
+
+.toggle-btn {
+    margin: 10px auto;
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.toggle-btn:hover {
+    background: linear-gradient(135deg, #5f72be, #9b23ea);
+    transform: scale(1.05);
+}
+
+.project-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease, padding 0.3s ease;
+    padding: 0 10px;
+    opacity: 0;
+    transition: all 0.6s ease;
+}
+
+.project-details.expanded {
+    max-height: 1000px; 
+    opacity: 1;
+    padding: 10px;
 }
