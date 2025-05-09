@@ -124,22 +124,53 @@ If you want to remove the bucket afterward, delete the stack:
 ```bash
 aws cloudformation delete-stack --stack-name demo-infra-stack
 ```
+### 📈 Monitoring & Observability
 
-## Services Used  
-### AWS EC2  – Hosting the backend application
-### AWS S3  – Storing and serving static assets for the frontend
-### AWS CloudFront  – Content Delivery Network for fast, global access
-### AWS Route 53  – Domain registration and DNS management
-### AWS RDS (MySQL)  – Managed relational database service
-### AWS ACM  – SSL certificate for secure HTTPS connections
-### :construction: AWS CloudWatch  – Monitoring and high availability (planned)
-### :construction: AWS KMS  – Encryption for data at rest (planned)
-### :construction: AWS SNS  – Notifications for CPU alarms or form submissions (planned)
-### GitHub  – Version control and collaboration
+This project includes a CloudWatch Dashboard that provides real-time observability for the backend application hosted on EC2.
+
+🧩 Metrics Tracked:
+Response Time – Measured via custom CloudWatch metric (MultiTierApp/ResponseTime) from the Node.js backend (Express.js middleware).
+
+EC2 CPU Utilization – Monitored through native AWS metrics.
+
+🧰 How It Works:
+The backend application logs response times for all incoming API requests and sends them to Amazon CloudWatch using putMetricData.
+
+A CloudFormation template (cloudwatch-dashboard.yml) provisions a visual dashboard with time series charts for:
+
+Response time (e.g. /api/contact)
+
+EC2 instance CPU usage
+
+📊 Where to View It:
+Go to the AWS Console → CloudWatch → Dashboards → MultiTierAppDashboard
+
+You can customize or expand this dashboard to include:
+
+Memory and disk usage
+
+Application errors (5xx)
+
+API Gateway metrics (if used)
+
+Database connection latency
+
+## Services Used
+
+### AWS EC2 – Hosting the backend application
+### AWS S3 – Storing and serving static assets for the frontend
+### AWS CloudFront – Content Delivery Network for fast, global access
+### AWS Route 53 – Domain registration and DNS management
+### AWS RDS (MySQL) – Managed relational database service
+### AWS ACM – SSL certificate for secure HTTPS connections
+### AWS CloudWatch – Monitoring, metrics (response time, CPU), dashboard
+### AWS SNS – Notifications for contact form submissions and alarm alerts
+### GitHub – Version control, collaboration, and planned CI/CD integration
 
 ### Usage ###
+
 Visit the Website
-The application is live at https://crow-project.click.
+The application is live at https://crow-project.click
 
 Try the Contact Form
 Submit a message through the form, which will be securely stored in the MySQL database.
