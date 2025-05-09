@@ -1,23 +1,57 @@
+require('dotenv').config()
+
 const express = require('express')
-const app = express()
+const AWS = require('aws-sdk')
+const cloudwatch = new AWS.CloudWatch()
 const bodyParser = require('body-parser')
 const mysql = require('mysql2')
 const cors = require('cors')
 const fs = require('fs')
-const AWS = require('aws-sdk') // Import AWS SDK
-require('dotenv').config() // Load environment variables
+const morgan = require('morgan')
 
-// Middleware
-app.use(bodyParser.json())
-
-// CORS configuration
-app.use(cors())
+const app = express()
 
 // AWS Configuration
-AWS.config.update({ region: 'us-east-1' }) // Ustaw odpowiedni region
+AWS.config.update({ region: 'us-east-1' })
 const sns = new AWS.SNS()
 
-// Database connection pool configuration for RDS
+// ===== Middleware =====
+app.use(cors())
+app.use(morgan('combined'))
+
+// Middleware to send response time metrics to CloudWatch
+app.use((req, res, next) => {
+    const start = Date.now()
+
+    res.on('finish', () => {
+        const duration = Date.now() - start
+
+        const params = {
+            MetricData: [
+                {
+                    MetricName: 'ResponseTime',
+                    Dimensions: [
+                        { Name: 'Path', Value: req.path },
+                        { Name: 'Method', Value: req.method }
+                    ],
+                    Unit: 'Milliseconds',
+                    Value: duration
+                }
+            ],
+            Namespace: 'MultiTierApp'
+        }
+
+        cloudwatch.putMetricData(params, (err) => {
+            if (err) console.error('CloudWatch metric error:', err)
+        })
+    })
+
+    next()
+})
+
+app.use(bodyParser.json())
+
+// ===== Database =====
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -28,7 +62,7 @@ const pool = mysql.createPool({
     queueLimit: 0,
 })
 
-// Function to log messages to a file
+// ===== Helper Functions =====
 const logMessage = (message) => {
     const log = `${new Date().toISOString()} - ${JSON.stringify(message)}\n`
     fs.appendFile('messages.log', log, (err) => {
@@ -36,12 +70,11 @@ const logMessage = (message) => {
     })
 }
 
-// Function to send notification via SNS
 const sendSNSNotification = (message) => {
     const params = {
         Message: `New contact form submission:\n\nName: ${message.name}\nEmail: ${message.email}\nMessage: ${message.message}`,
         Subject: 'New Contact Form Submission',
-        TopicArn: 'arn:aws:sns:us-east-1:985539802934:ContactForm', 
+        TopicArn: 'arn:aws:sns:us-east-1:985539802934:ContactForm',
     }
 
     sns.publish(params, (err, data) => {
@@ -53,16 +86,14 @@ const sendSNSNotification = (message) => {
     })
 }
 
-// Endpoint to handle contact form submissions
+// ===== Routes =====
 app.post('/api/contact', (req, res) => {
     const { name, email, message } = req.body
 
-    // Validate input
     if (!name || !email || !message) {
         return res.status(400).send({ success: false, error: 'All fields are required' })
     }
 
-    // Use pool to query the database
     const query = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)'
     pool.query(query, [name, email, message], (err, result) => {
         if (err) {
@@ -70,19 +101,18 @@ app.post('/api/contact', (req, res) => {
             res.status(500).send({ success: false, error: 'Server error' })
         } else {
             console.log('Message saved:', result)
-            logMessage({ name, email, message }) // Log message to file
-            sendSNSNotification({ name, email, message }) // Send SNS notification
+            logMessage({ name, email, message })
+            sendSNSNotification({ name, email, message })
             res.status(200).send({ success: true, message: 'Message saved!' })
         }
     })
 })
 
-// Endpoint to check if the backend is running
 app.get('/', (req, res) => {
     res.send('Backend is running!')
 })
 
-// Start the server
+// ===== Start Server =====
 const PORT = 3000
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
