@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation Template to create an RDS MySQL instance for the multi-tier web application.
+#only for view
+Parameters:
+  DBName:
+    Description: "The initial database name."
+    Type: String
+    Default: "mydb"
+  DBUsername:
+    Description: "The database admin account username."
+    Type: String
+    Default: "admin"
+  DBPassword:
+    Description: "The database admin account password."
+    Type: String
+    NoEcho: true
+  DBInstanceClass:
+    Description: "The database instance class."
+    Type: String
+    Default: "db.t3.micro"
+  AllocatedStorage:
+    Description: "The allocated storage in GB."
+    Type: Number
+    Default: 20
+  VPCSecurityGroupIds:
+    Description: "List of VPC security group IDs for the RDS instance."
+    Type: List<AWS::EC2::SecurityGroup::Id>
+  DBSubnetGroupName:
+    Description: "The DB subnet group name for the RDS instance."
+    Type: String
+
+Resources:
+  MyDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref DBName
+      Engine: MySQL
+      EngineVersion: "8.0"
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref AllocatedStorage
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      VPCSecurityGroups: !Ref VPCSecurityGroupIds
+      DBSubnetGroupName: !Ref DBSubnetGroupName
+      MultiAZ: false
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 7
+
+Outputs:
+  DBInstanceEndpoint:
+    Description: "The connection endpoint for the RDS instance."
+    Value: !GetAtt MyDBInstance.Endpoint.Address
