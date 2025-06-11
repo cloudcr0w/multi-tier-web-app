@@ -31,7 +31,7 @@ This project is a portfolio application showcasing a multi-tier architecture on 
 
 ## 📊 Architecture Diagram *(coming soon)*
 
-![Architecture](./diagram.jpg)
+![Architecture](./diagram-projekt.png)
 
 ---
 
