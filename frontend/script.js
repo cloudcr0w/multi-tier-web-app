@@ -132,3 +132,9 @@ document.querySelectorAll('.toggle-btn').forEach(button => {
         button.textContent = isExpanded ? 'Show More ⬇️' : 'Show Less ⬆️'
     })
 })
+
+fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ page: "home" })
+});
