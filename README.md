@@ -148,7 +148,63 @@ EC2 instance CPU usage
 Go to the AWS Console → CloudWatch → Dashboards → MultiTierAppDashboard
 
 You can customize or expand this dashboard to include:
+# Multi-Tier Web Application
 
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=cloudcr0w.multi-tier-web-app)
+
+This project is a portfolio application designed to showcase a multi-tier architecture on AWS. The backend is built with **Node.js** and **Express**, the database runs on **AWS RDS (MySQL)**, and the frontend is a static website hosted on **S3** and distributed through **CloudFront**. A custom domain is managed via **Route 53**, and SSL certificates are provided by **AWS Certificate Manager (ACM)**.
+
+---
+
+## Features
+
+- **Backend**: RESTful API built with Node.js and Express.
+- **Database**: MySQL database hosted on AWS RDS.
+- **Frontend**: Static website hosted on AWS S3, served through CloudFront.
+- **Domain**: Custom domain with Route 53 DNS management.
+- **CDN**: CloudFront for fast content delivery.
+- **Security**: SSL via AWS ACM.
+
+---
+
+## Infrastructure as Code
+
+CloudFormation templates are used to provision key resources like:
+- EC2 alarms & notifications (`cpu-alarm.yml`)
+- CloudFront distribution for the frontend (`cloudfront-distribution.yml`)
+- Demo S3 bucket stack (`demo-infra.yml`)
+- Visitor tracking API with Lambda & API Gateway (`visit-tracker.yml`)
+
+## Monitoring
+
+Includes a CloudWatch Dashboard with:
+- EC2 CPU usage
+- Backend response times
+- SNS for alerts
+
+## Docker
+
+Backend containerized with Docker for local testing.
+
+```bash
+docker build -t my-backend-app .
+docker run -p 3000:3000 my-backend-app
+```
+
+## Live Demo
+
+Visit: **https://crow-project.click**  
+Try the contact form and see backend + database integration in action.
+
+## Services Used
+
+- AWS EC2, S3, RDS, Route 53, ACM, CloudFront
+- AWS CloudWatch, CloudFormation, SNS
+- GitHub (version control, CI/CD planned)
+
+---
+
+📁 For planned improvements, see [`FUTURE_PLANS.md`](./FUTURE_PLANS.md)
 Memory and disk usage
 
 Application errors (5xx)
