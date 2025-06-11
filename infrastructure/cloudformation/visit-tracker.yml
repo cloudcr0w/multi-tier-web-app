@@ -1,0 +1,123 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Visitor tracking API with Lambda + API Gateway
+
+Resources:
+  VisitTrackerFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: VisitTrackerLambdaRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LogToCloudWatch
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+
+  VisitTrackerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: VisitTrackerFunction
+      Handler: index.handler
+      Role: !GetAtt VisitTrackerFunctionRole.Arn
+      Runtime: nodejs18.x
+      Code:
+        ZipFile: |
+          exports.handler = async (event) => {
+            const headers = event.headers || {};
+            const ip = event.requestContext?.identity?.sourceIp || 'unknown';
+            const userAgent = headers['User-Agent'] || headers['user-agent'] || 'unknown';
+            const referer = headers['Referer'] || headers['referer'] || 'direct';
+            const page = JSON.parse(event.body || '{}')?.page || 'home';
+            console.log(`📈 Visit logged: ${ip}, ${userAgent}, ${referer}, page: ${page}`);
+            return {
+              statusCode: 200,
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*"
+              },
+              body: JSON.stringify({ message: "Visit logged" })
+            };
+          }
+
+  VisitTrackerApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: VisitTrackerAPI
+
+  VisitTrackerResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref VisitTrackerApi
+      ParentId: !GetAtt VisitTrackerApi.RootResourceId
+      PathPart: track
+
+  VisitTrackerMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref VisitTrackerApi
+      ResourceId: !Ref VisitTrackerResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: >-
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${VisitTrackerFunction.Arn}/invocations
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+          ResponseModels:
+            application/json: "Empty"
+
+
+  VisitTrackerOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref VisitTrackerApi
+      ResourceId: !Ref VisitTrackerResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Origin: true
+          ResponseModels:
+            application/json: "Empty"
+      IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+            method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ""
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref VisitTrackerFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${VisitTrackerApi}/*/POST/track
