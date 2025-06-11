@@ -1,3 +1,30 @@
+# Env and secrets
 .env
+
+# IDE
 .vscode/
+
+# Node
 node_modules/
+npm-debug.log*
+
+# AWS / Lambda / Terraform
+*.zip
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Build outputs
+dist/
+build/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Temp
+tmp/
