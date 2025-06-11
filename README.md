@@ -1,5 +1,7 @@
 # Multi-Tier Web Application
 
+📄 [🇵🇱 Zobacz wersję po polsku](README_PL.md)
+
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=cloudcr0w.multi-tier-web-app)
 
 This project is a portfolio application designed to showcase a multi-tier architecture on AWS. The backend is built with **Node.js** and **Express**, the database runs on **AWS RDS (MySQL)**, and the frontend is a static website hosted on **S3** and distributed through **CloudFront**. A custom domain is managed via **Route 53**, and SSL certificates are provided by **AWS Certificate Manager (ACM)**.
