@@ -48,13 +48,25 @@ Includes **CloudFormation** templates for:
 
 ## 📈 Monitoring & Observability
 
-CloudWatch Dashboard with:
+CloudWatch Dashboard includes:
 
 - EC2 CPU usage
 - API response times (`MultiTierApp/ResponseTime`)
+- Lambda `trackVisit` metrics:
+  - Invocations
+  - Errors
+  - Duration
+- API Gateway metrics:
+  - 5XX Errors
+  - Latency
+  - Count
 - SNS alerts for CPU spikes
 
----
+<!-- Defined in [`cloudwatch-dashboard.yml`](infrastructure/cloudformation/cloudwatch-dashboard.yml) -->
+
+> Example view:
+> ![CloudWatch Dashboard Preview](./dashboard-preview.png)
+
 
 ## 🐳 Docker
 
