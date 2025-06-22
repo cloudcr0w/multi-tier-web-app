@@ -50,7 +50,7 @@ Resources:
               "height": 6,
               "properties": {
                 "metrics": [
-                  [ "AWS/Lambda", "Invocations", "FunctionName", "trackVisit" ],
+                  [ "AWS/Lambda", "Invocations", "FunctionName", "VisitTrackerFunction" ],
                   [ ".", "Errors", ".", "." ],
                   [ ".", "Duration", ".", "." ]
                 ],
