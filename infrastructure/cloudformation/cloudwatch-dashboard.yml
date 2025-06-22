@@ -41,6 +41,40 @@ Resources:
                 "region": "${AWS::Region}",
                 "title": "EC2 CPU Utilization"
               }
+            },
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 6,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  [ "AWS/Lambda", "Invocations", "FunctionName", "trackVisit" ],
+                  [ ".", "Errors", ".", "." ],
+                  [ ".", "Duration", ".", "." ]
+                ],
+                "period": 60,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "Lambda: trackVisit (Invocations / Errors / Duration)"
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12,
+              "y": 6,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  [ "AWS/ApiGateway", "5XXError", "ApiName", "multi-tier-api" ],
+                  [ ".", "Latency", ".", "." ],
+                  [ ".", "Count", ".", "." ]
+                ],
+                "region": "${AWS::Region}",
+                "title": "API Gateway Errors & Latency"
+              }
             }
           ]
         }
