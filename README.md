@@ -61,11 +61,11 @@ CloudWatch Dashboard includes:
   - Latency
   - Count
 - SNS alerts for CPU spikes
-
+<!-- screenshots from cloudwatch would be available soon  -->
 <!-- Defined in [`cloudwatch-dashboard.yml`](infrastructure/cloudformation/cloudwatch-dashboard.yml) -->
 
-> Example view:
-> ![CloudWatch Dashboard Preview](./dashboard-preview.png)
+<!-- > Example view:
+> ![CloudWatch Dashboard Preview](./dashboard-preview.png) -->
 
 
 ## 🐳 Docker
