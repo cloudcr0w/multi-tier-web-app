@@ -2,24 +2,28 @@ const chatMessages = document.getElementById("chat-messages");
 const chatInput = document.getElementById("chat-input");
 const chatSend = document.getElementById("chat-send");
 
-// Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', () => {
-	const welcomeScreen = document.getElementById('welcome-screen')
-	const mainContent = document.getElementById('main-content')
-	const welcomeButton = document.getElementById('welcome-button')
+    const welcomeScreen = document.getElementById('welcome-screen')
+    const mainContent = document.getElementById('main-content')
+    const welcomeButton = document.getElementById('welcome-button')
+    const chatContainer = document.getElementById('chat-container'); // Chatbot container
 
-	// Handle click on the welcome button
-	welcomeButton.addEventListener('click', () => {
-		// Hide the welcome screen
-		welcomeScreen.classList.add('hidden')
+    // Handle click on the welcome button
+    welcomeButton.addEventListener('click', () => {
+        // Hide the welcome screen
+        welcomeScreen.classList.add('hidden')
 
-		// Display the main content after the transition
-		setTimeout(() => {
-			welcomeScreen.style.display = 'none'
-			mainContent.style.display = 'block'
-			mainContent.classList.add('fade-in')
-		}, 500) // Match the CSS transition duration
-	})
+        // Display the main content and chatbot after the transition
+        setTimeout(() => {
+            welcomeScreen.style.display = 'none'
+            mainContent.style.display = 'block'
+            chatContainer.style.display = 'block'; // Show chatbot after delay
+            setTimeout(() => {
+                chatContainer.classList.add('show'); // Add the class to trigger animation
+            }, 500); // Delay the chatbot appearance
+            mainContent.classList.add('fade-in')
+        }, 500) // Match the CSS transition duration
+    })
 })
 // JavaScript to set the current year
 document.getElementById('current-year').textContent = new Date().getFullYear()
@@ -173,3 +177,5 @@ chatSend.addEventListener("click", () => {
     });
   }
 });
+// After showing chatbot, add fade-in class to animate
+chatContainer.classList.add('fade-in');

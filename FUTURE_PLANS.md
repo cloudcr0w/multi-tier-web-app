@@ -11,6 +11,9 @@
 - Add ALB + Auto Scaling Group for backend
 - Migrate containers to ECS Fargate or Amazon EKS
 
+## chatbot MVP 
+- UI + Lambda + API Gateway
+
 ## Monitoring
 - Add memory/disk usage to CloudWatch Dashboard
 - Track 5xx errors and API latency
