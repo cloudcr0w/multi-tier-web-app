@@ -1,3 +1,7 @@
+const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSend = document.getElementById("chat-send");
+
 // Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', () => {
 	const welcomeScreen = document.getElementById('welcome-screen')
@@ -26,19 +30,23 @@ const backendUrl = 'https://d34d0xv55dvwew.cloudfront.net/api/contact'
 
 
 // scroll-up button
-const scrollTopBtn = document.getElementById('scroll-top-btn')
+const scrollTopBtn = document.getElementById('scroll-top-btn');
 
 window.addEventListener('scroll', () => {
     if (window.scrollY > 300) {
-        scrollTopBtn.style.display = 'block'
+        scrollTopBtn.classList.add('show');
+        scrollTopBtn.classList.remove('hide');
     } else {
-        scrollTopBtn.style.display = 'none'
+        scrollTopBtn.classList.add('hide');
+        scrollTopBtn.classList.remove('show');
     }
-})
+});
 
 scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-})
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTopBtn.classList.add('hide');
+    scrollTopBtn.classList.remove('show');
+});
 
 // Handle form submission
 async function sendMessage(event) {
@@ -137,4 +145,31 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ page: "home" })
+});
+
+// chatbot
+chatSend.addEventListener("click", () => {
+  const text = chatInput.value.trim();
+  if(text) {
+    addMessage(text, "user");
+    chatInput.value = "";
+
+    addTypingIndicator();
+
+    fetch("https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    })
+    .then(res => res.json())
+    .then(data => {
+      removeTypingIndicator();
+      addMessage(data.reply, "bot");
+    })
+    .catch(err => {
+      removeTypingIndicator();
+      addMessage("⚠️ Error contacting AI API", "bot");
+      console.error(err);
+    });
+  }
 });

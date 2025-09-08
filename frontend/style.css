@@ -69,12 +69,12 @@ body {
 		opacity: 1;
 	}
 }
-/*scroll button style*/
+/* scroll button style */
 #scroll-top-btn {
 	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	padding: 12px 20px;
+	top: 5px;
+	right: 50px;
+	padding: 10px 20px;
 	background: linear-gradient(45deg, #10b981, #0284c7);
 	background-size: 200% 200%;
 	color: white;
@@ -84,9 +84,20 @@ body {
 	font-size: 16px;
 	font-weight: bold;
 	box-shadow: 0 4px 10px rgba(0, 255, 128, 0.4);
-	display: none;
-	transition: background 0.8s ease-in-out, transform 0.2s, box-shadow 0.3s;
+	opacity: 0;               /* start hidden */
+	visibility: hidden;       /* żeby nie klikalny */
+	transition: opacity 0.8s ease, visibility 0.8s ease, background 0.8s ease-in-out, transform 0.2s, box-shadow 0.3s;
 	z-index: 1000;
+}
+
+#scroll-top-btn.show {
+	opacity: 1;
+	visibility: visible;
+}
+
+#scroll-top-btn.hide {
+	opacity: 0;
+	visibility: hidden;
 }
 
 #scroll-top-btn:hover {
@@ -94,6 +105,7 @@ body {
 	transform: scale(1.1);
 	box-shadow: 0 6px 14px rgba(255, 115, 0, 0.6);
 }
+
 
 @media (max-width: 1024px) {
 	#scroll-top-btn {
