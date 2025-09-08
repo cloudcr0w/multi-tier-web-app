@@ -177,5 +177,29 @@ chatSend.addEventListener("click", () => {
     });
   }
 });
-// After showing chatbot, add fade-in class to animate
-chatContainer.classList.add('fade-in');
+function addMessage(text, sender) {
+  const messageElement = document.createElement("div"); // Tworzymy nowy element dla wiadomości
+  messageElement.classList.add(sender); // Ustawiamy klasę dla nadawcy wiadomości (np. "user" lub "bot")
+  messageElement.textContent = text; // Ustawiamy tekst wiadomości
+  chatMessages.appendChild(messageElement); // Dodajemy wiadomość do kontenera wiadomości
+
+  // Auto scroll na dół po każdej nowej wiadomości
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function addTypingIndicator() {
+  const typingElement = document.createElement("div");
+  typingElement.classList.add("typing-indicator");
+  typingElement.textContent = "🤖 Bot is typing...";
+  chatMessages.appendChild(typingElement);
+}
+
+function removeTypingIndicator() {
+  const typingElement = document.querySelector(".typing-indicator");
+  if (typingElement) {
+    typingElement.remove(); // Usuwamy wskaźnik ładowania po zakończeniu
+  }
+}
+
+
+// // After showing chatbot, add fade-in class to animate
+// chatContainer.classList.add('fade-in');

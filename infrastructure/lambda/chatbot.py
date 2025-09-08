@@ -2,6 +2,10 @@ import json
 import os
 import boto3
 from botocore.config import Config
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 # Bedrock client
 bedrock = boto3.client(
@@ -19,7 +23,7 @@ SYSTEM_PROMPT = (
 # Function to invoke Bedrock
 def call_bedrock_claude(user_msg):
     body = {
-        "anthropic_version": "bedrock-2023-05-31",  # Use Claude version
+        "anthropic_version": "bedrock-2023-05-31",
         "max_tokens": 350,
         "temperature": 0.2,
         "messages": [
@@ -30,20 +34,29 @@ def call_bedrock_claude(user_msg):
         ]
     }
 
-    model_id = os.getenv("MODEL_ID", "anthropic.claude-4:0")
-    response = bedrock.invoke_model(
-        modelId=model_id,
-        accept="application/json",
-        contentType="application/json",
-        body=json.dumps(body)
-    )
-    payload = json.loads(response["body"].read().decode("utf-8"))
+    # Model ID
+    model_id = os.getenv("MODEL_ID")
+    api_key = os.getenv("BEDROCK_API_KEY")
 
-    # Extract reply from Claude
     try:
-        reply = payload["content"][0]["text"]
+        response = bedrock.invoke_model(
+            modelId=model_id,
+            accept="application/json",
+            contentType="application/json",
+            body=json.dumps(body)
+        )
+        
+        payload = json.loads(response["body"].read().decode("utf-8"))
+        logging.info("API Response: %s", payload)  # Logging the API response for debug
+
+        # Extract reply from Claude
+        try:
+            reply = payload["content"][0]["text"]
+        except KeyError:
+            reply = "Error in processing response from model."
     except Exception as e:
-        reply = f"Error in processing: {str(e)}"
+        logging.error("Error invoking model: %s", str(e))  # Error logging
+        reply = f"Error in invoking model: {str(e)}"
 
     return reply
 
@@ -67,6 +80,7 @@ def lambda_handler(event, context):
             "body": json.dumps({"reply": reply})
         }
     except Exception as e:
+        logging.error("Server error: %s", str(e))  # Error logging
         return {
             "statusCode": 500,
             "headers": {
