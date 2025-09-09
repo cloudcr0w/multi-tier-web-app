@@ -143,7 +143,7 @@ Certified in AWS, fueled by coffee, and building hands-on projects to break into
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Adam%20Wrona-blue?logo=linkedin&style=flat-square)](https://www.linkedin.com/in/adam-wrona-111ba728b/)  
 🌍 [GitHub – @cloudcr0w](https://github.com/cloudcr0w)  
-📫 adam.wrona.dev@gmail.com
+📫 adamwronowy@gmail.com
 
 ---
 
