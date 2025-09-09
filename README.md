@@ -102,6 +102,18 @@ CloudWatch + SNS – Metrics, alerts
 
 CloudFormation – Infrastructure as Code
 
+## 🤖 AI Chatbot
+
+Integrated **AI chatbot** on the frontend – deployed via **AWS Lambda + API Gateway** with **Bedrock Claude** model.  
+
+- Responds to questions about my skills and projects  
+- Dynamically styled chat window with animations  
+- Input always visible & auto-scroll for messages  
+- Security features: request normalization, blocklist, CORS, API Gateway throttling  
+
+👉 Try it live: [https://crow-project.click](https://crow-project.click)  
+
+
 ## 📌 What's Next?
 See FUTURE_PLANS.md for upcoming improvements:
 
