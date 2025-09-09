@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const welcomeScreen = document.getElementById('welcome-screen')
     const mainContent = document.getElementById('main-content')
     const welcomeButton = document.getElementById('welcome-button')
-    const chatContainer = document.getElementById('chat-container'); // Chatbot container
+    const chatContainer = document.getElementById('chat-container'); 
 
     // Handle click on the welcome button
     welcomeButton.addEventListener('click', () => {
@@ -150,56 +150,184 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ page: "home" })
 });
+// === CHATBOT ===
+(function () {
+  const chatBackendUrl = "https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/chat";
 
-// chatbot
-chatSend.addEventListener("click", () => {
-  const text = chatInput.value.trim();
-  if(text) {
-    addMessage(text, "user");
-    chatInput.value = "";
+  const $messages  = document.getElementById("chat-messages");
+  const $input     = document.getElementById("chat-input");
+  const $send      = document.getElementById("chat-send");
+  const $container = document.getElementById("chat-container");
 
-    addTypingIndicator();
+  if (!$messages || !$input || !$send || !$container) {
+    console.warn("[chat] Elements not found, skipping init.");
+    return;
+  }
 
-    fetch("https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
-    })
-    .then(res => res.json())
-    .then(data => {
-      removeTypingIndicator();
-      addMessage(data.reply, "bot");
-    })
-    .catch(err => {
-      removeTypingIndicator();
-      addMessage("⚠️ Error contacting AI API", "bot");
-      console.error(err);
+  // Pojawienie z opóźnieniem (fade-in z CSS)
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      $container.classList.add("show"); // tylko animacja; rozwijanie robi hover/focus
+      resetInactivityTimer();           // start licznika bezczynności
+    }, 800);
+  });
+
+  function scrollToBottom() {
+    requestAnimationFrame(() => {
+      $messages.scrollTop = $messages.scrollHeight;
     });
   }
-});
-function addMessage(text, sender) {
-  const messageElement = document.createElement("div"); // Tworzymy nowy element dla wiadomości
-  messageElement.classList.add(sender); // Ustawiamy klasę dla nadawcy wiadomości (np. "user" lub "bot")
-  messageElement.textContent = text; // Ustawiamy tekst wiadomości
-  chatMessages.appendChild(messageElement); // Dodajemy wiadomość do kontenera wiadomości
 
-  // Auto scroll na dół po każdej nowej wiadomości
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-function addTypingIndicator() {
-  const typingElement = document.createElement("div");
-  typingElement.classList.add("typing-indicator");
-  typingElement.textContent = "🤖 Bot is typing...";
-  chatMessages.appendChild(typingElement);
-}
-
-function removeTypingIndicator() {
-  const typingElement = document.querySelector(".typing-indicator");
-  if (typingElement) {
-    typingElement.remove(); // Usuwamy wskaźnik ładowania po zakończeniu
+  function addMessage(text, role) {
+    const div = document.createElement("div");
+    div.className = `message ${role}`;
+    div.textContent = text;
+    $messages.appendChild(div);
+    scrollToBottom();
   }
+
+  function addTypingIndicator() {
+    const tip = document.createElement("div");
+    tip.className = "message bot typing-indicator";
+    tip.textContent = "Bot is typing...";
+    $messages.appendChild(tip);
+    scrollToBottom();
+  }
+
+  function removeTypingIndicator() {
+    const tip = $messages.querySelector(".typing-indicator");
+    if (tip) tip.remove();
+  }
+
+  let busy = false;
+  async function sendChat() {
+    if (busy) return;
+    const text = ($input.value || "").trim();
+    if (!text) return;
+
+    busy = true;
+    addMessage(text, "user");
+    openChat();                 // utrzymaj rozwinięty stan
+    $input.value = "";
+    $input.focus();
+    addTypingIndicator();
+
+    try {
+      const res = await fetch(chatBackendUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      });
+
+      let reply = "No reply received.";
+      if (res.ok) {
+        const data = await res.json();
+        reply = data.reply || reply;
+      } else {
+        try {
+          const err = await res.json();
+          reply = `Server error: ${err.error || res.statusText}`;
+        } catch {
+          reply = `Server error: ${res.status} ${res.statusText}`;
+        }
+      }
+      removeTypingIndicator();
+      addMessage(reply, "bot");
+    } catch (e) {
+      console.error("[chat] fetch error:", e);
+      removeTypingIndicator();
+      addMessage("⚠️ Network error. Please try again.", "bot");
+    } finally {
+      setTimeout(() => { busy = false; }, 700); // lekki debounce
+      resetInactivityTimer();
+    }
+  }
+
+// --- AUTO POWRÓT DO „PASKA” PO BEZCZYNNOŚCI ---
+const INACTIVITY_SECS = 6;  // ustaw sobie docelowo
+let inactivityTimer = null;
+
+function openChat(){
+  $container.classList.remove("bar");  // nie pasek
+  $container.classList.add("open");    // pełne okno
 }
 
+function closeChat(){
+  // zdejmij fokus, żeby :focus-within nie trzymało otwartego
+  if (document.activeElement === $input) $input.blur();
+  $container.classList.remove("open");
+  $container.classList.add("bar");     // WYRAŹNIE: stan paska (welcome + input)
+}
 
-// // After showing chatbot, add fade-in class to animate
-// chatContainer.classList.add('fade-in');
+function resetInactivityTimer(){
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    const hovering = $container.matches(":hover");
+    const focusedInside = $container.contains(document.activeElement);
+    if (!hovering && !focusedInside) closeChat();
+  }, INACTIVITY_SECS * 1000);
+}
+
+// Aktywność w obrębie widżetu => otwieraj i restartuj timer
+["mousemove","keydown","wheel","touchstart"].forEach(ev => {
+  $container.addEventListener(ev, () => {
+    openChat();
+    resetInactivityTimer();
+  }, { passive: true });
+});
+
+// Otwieraj na fokus/mouseenter (wystarczy raz)
+[$input, $messages].forEach(el => {
+  el.addEventListener("focus", () => { openChat(); resetInactivityTimer(); });
+  el.addEventListener("mouseenter", () => { openChat(); resetInactivityTimer(); });
+});
+
+// Enter-to-send już masz niżej – dorzuć reset timera w else:
+$input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  } else {
+    resetInactivityTimer();
+  }
+});
+
+// Start licznika gdy widget się pojawi (po .show)
+window.addEventListener("load", () => {
+  const obs = new MutationObserver(() => {
+    if ($container.classList.contains("show")) {
+      // Na starcie chcemy pasek, więc ustawiamy .bar
+      $container.classList.add("bar");
+      resetInactivityTimer();
+      obs.disconnect();
+    }
+  });
+  obs.observe($container, { attributes: true, attributeFilter: ["class"] });
+});
+
+
+  // Otwieraj na fokus/mouseenter (zachowanie jak dotąd)
+  [$input, $messages].forEach(el => {
+    el.addEventListener("focus", () => { openChat(); resetInactivityTimer(); });
+    el.addEventListener("mouseenter", () => { openChat(); resetInactivityTimer(); });
+  });
+
+  // Enter-to-send
+  $input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendChat();
+    } else {
+      resetInactivityTimer();
+    }
+  });
+
+  $send.addEventListener("click", () => { sendChat(); });
+
+  // Klik w tło chatu ustawia focus na input
+  $container.addEventListener("click", (e) => {
+    if (e.target === $container || e.target.classList.contains("chat-messages")) {
+      $input.focus();
+    }
+  });
+})();
