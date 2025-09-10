@@ -147,8 +147,8 @@ def call_bedrock_claude(user_msg: str) -> str:
     
     body = {
         "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 15,
-        "temperature": 0.3,
+        "max_tokens": 90,
+        "temperature": 0.5,
         "top_p": 0.9,
         "stop_sequences": [".", "?", "!", ","],
         "system": [
@@ -195,8 +195,8 @@ def call_bedrock_claude(user_msg: str) -> str:
         # Normalize reply
         reply = reply.strip()
 
-        # Limit by characters (safety net, e.g. 400 chars)
-        max_chars = 50
+        # Limit by characters (safety net, e.g. 230 chars)
+        max_chars = 230
         if len(reply) > max_chars:
             reply = reply[:max_chars].rstrip() + "..."
 
@@ -204,8 +204,8 @@ def call_bedrock_claude(user_msg: str) -> str:
         sentences = re.split(r"[.!?]\s+", reply)
         sentences = [s.strip() for s in sentences if s.strip()]
 
-        # Always keep max 2 sentences
-        reply = ". ".join(sentences[:2]).rstrip(".") + "."
+        # Always keep max 3 sentences
+        reply = ". ".join(sentences[:3]).rstrip(".") + "."
 
         return reply
 
