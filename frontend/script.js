@@ -151,10 +151,9 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   body: JSON.stringify({ page: "home" })
 });
 
-
 // === CHATBOT ===
 (function () {
-  const chatBackendUrl = "https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/cha";
+  const chatBackendUrl = "https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/chat";
 
   const $messages  = document.getElementById("chat-messages");
   const $input     = document.getElementById("chat-input");
@@ -203,10 +202,29 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   }
 
   let busy = false;
+
+  // --- Cooldown setup ---
+  let lastRequestTime = 0;
+  const COOLDOWN_MS = 2000; // 2 sekundy przerwy
+
   async function sendChat() {
     if (busy) return;
     const text = ($input.value || "").trim();
     if (!text) return;
+
+    // --- Cooldown ---
+    const now = Date.now();
+    if (now - lastRequestTime < COOLDOWN_MS) {
+      addMessage("⚠️ Please wait a moment before asking again.", "bot");
+      return;
+    }
+    lastRequestTime = now;
+
+    // --- Limit długości pytania ---
+    if (text.length > 50) {
+      addMessage("⚠️ Your question is too long (max 50 chars).", "bot");
+      return;
+    }
 
     busy = true;
     addMessage(text, "user");
