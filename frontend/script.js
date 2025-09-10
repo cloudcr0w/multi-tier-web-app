@@ -150,9 +150,11 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ page: "home" })
 });
+
+
 // === CHATBOT ===
 (function () {
-  const chatBackendUrl = "https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/chat";
+  const chatBackendUrl = "https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/cha";
 
   const $messages  = document.getElementById("chat-messages");
   const $input     = document.getElementById("chat-input");
@@ -164,11 +166,12 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
     return;
   }
 
-  // Pojawienie z opóźnieniem (fade-in z CSS)
+  // Fade-in effect on page load
   window.addEventListener("load", () => {
     setTimeout(() => {
-      $container.classList.add("show"); // tylko animacja; rozwijanie robi hover/focus
-      resetInactivityTimer();           // start licznika bezczynności
+      $container.classList.add("show");
+      $container.classList.add("bar"); // collapsed state on start
+      resetInactivityTimer();
     }, 800);
   });
 
@@ -207,7 +210,7 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
 
     busy = true;
     addMessage(text, "user");
-    openChat();                 // utrzymaj rozwinięty stan
+    openChat();
     $input.value = "";
     $input.focus();
     addTypingIndicator();
@@ -238,75 +241,44 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
       removeTypingIndicator();
       addMessage("⚠️ Network error. Please try again.", "bot");
     } finally {
-      setTimeout(() => { busy = false; }, 700); // lekki debounce
+      setTimeout(() => { busy = false; }, 700); // debounce
       resetInactivityTimer();
     }
   }
 
-// --- AUTO POWRÓT DO „PASKA” PO BEZCZYNNOŚCI ---
-const INACTIVITY_SECS = 6;  // ustaw sobie docelowo
-let inactivityTimer = null;
+  // --- Auto-collapse after inactivity ---
+  const INACTIVITY_SECS = 6;
+  let inactivityTimer = null;
 
-function openChat(){
-  $container.classList.remove("bar");  // nie pasek
-  $container.classList.add("open");    // pełne okno
-}
-
-function closeChat(){
-  // zdejmij fokus, żeby :focus-within nie trzymało otwartego
-  if (document.activeElement === $input) $input.blur();
-  $container.classList.remove("open");
-  $container.classList.add("bar");     // WYRAŹNIE: stan paska (welcome + input)
-}
-
-function resetInactivityTimer(){
-  clearTimeout(inactivityTimer);
-  inactivityTimer = setTimeout(() => {
-    const hovering = $container.matches(":hover");
-    const focusedInside = $container.contains(document.activeElement);
-    if (!hovering && !focusedInside) closeChat();
-  }, INACTIVITY_SECS * 1000);
-}
-
-// Aktywność w obrębie widżetu => otwieraj i restartuj timer
-["mousemove","keydown","wheel","touchstart"].forEach(ev => {
-  $container.addEventListener(ev, () => {
-    openChat();
-    resetInactivityTimer();
-  }, { passive: true });
-});
-
-// Otwieraj na fokus/mouseenter (wystarczy raz)
-[$input, $messages].forEach(el => {
-  el.addEventListener("focus", () => { openChat(); resetInactivityTimer(); });
-  el.addEventListener("mouseenter", () => { openChat(); resetInactivityTimer(); });
-});
-
-// Enter-to-send już masz niżej – dorzuć reset timera w else:
-$input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendChat();
-  } else {
-    resetInactivityTimer();
+  function openChat(){
+    $container.classList.remove("bar");
+    $container.classList.add("open");
   }
-});
 
-// Start licznika gdy widget się pojawi (po .show)
-window.addEventListener("load", () => {
-  const obs = new MutationObserver(() => {
-    if ($container.classList.contains("show")) {
-      // Na starcie chcemy pasek, więc ustawiamy .bar
-      $container.classList.add("bar");
+  function closeChat(){
+    if (document.activeElement === $input) $input.blur();
+    $container.classList.remove("open");
+    $container.classList.add("bar"); // back to collapsed bar
+  }
+
+  function resetInactivityTimer(){
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      const hovering = $container.matches(":hover");
+      const focusedInside = $container.contains(document.activeElement);
+      if (!hovering && !focusedInside) closeChat();
+    }, INACTIVITY_SECS * 1000);
+  }
+
+  // Open chat on any activity inside widget
+  ["mousemove","keydown","wheel","touchstart"].forEach(ev => {
+    $container.addEventListener(ev, () => {
+      openChat();
       resetInactivityTimer();
-      obs.disconnect();
-    }
+    }, { passive: true });
   });
-  obs.observe($container, { attributes: true, attributeFilter: ["class"] });
-});
 
-
-  // Otwieraj na fokus/mouseenter (zachowanie jak dotąd)
+  // Focus/hover on input or messages keeps it open
   [$input, $messages].forEach(el => {
     el.addEventListener("focus", () => { openChat(); resetInactivityTimer(); });
     el.addEventListener("mouseenter", () => { openChat(); resetInactivityTimer(); });
@@ -322,9 +294,10 @@ window.addEventListener("load", () => {
     }
   });
 
+  // Send button click
   $send.addEventListener("click", () => { sendChat(); });
 
-  // Klik w tło chatu ustawia focus na input
+  // Click on container background focuses input
   $container.addEventListener("click", (e) => {
     if (e.target === $container || e.target.classList.contains("chat-messages")) {
       $input.focus();
