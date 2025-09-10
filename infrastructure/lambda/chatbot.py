@@ -23,7 +23,7 @@ MOCK_MODE = os.getenv("MOCK_MODE", "false").lower() == "true"
 # -------------------------------------------------------------------
 # Application-level guards
 # -------------------------------------------------------------------
-MAX_INPUT_CHARS = 800  # prevent oversized prompts
+MAX_INPUT_CHARS = 300  # prevent oversized prompts
 BLOCKLIST = {"fuck", "shit", "kurwa"}  # simple blocklist for abusive inputs
 
 ALLOWED_TOPICS_HINT = (
@@ -147,10 +147,10 @@ def call_bedrock_claude(user_msg: str) -> str:
     
     body = {
         "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 50,
+        "max_tokens": 15,
         "temperature": 0.3,
         "top_p": 0.9,
-        "stop_sequences": ["\n\nUser:"],
+        "stop_sequences": [".", "?", "!", ","],
         "system": [
         {
         "type": "text",
@@ -191,14 +191,14 @@ def call_bedrock_claude(user_msg: str) -> str:
         if not reply:
             return "I couldn’t parse the model response."
 
-        # --- Force short output ---
+             # --- Force short output ---
         # Normalize reply
         reply = reply.strip()
-        sentences = re.split(r"[.!?]\s+", reply)
-        sentences = [s.strip() for s in sentences if s.strip()]
-        if len(sentences) > 2:
-            reply = ". ".join(sentences[:2]).rstrip(".") + "."
 
+        # Limit by characters (safety net, e.g. 400 chars)
+        max_chars = 50
+        if len(reply) > max_chars:
+            reply = reply[:max_chars].rstrip() + "..."
 
         # Split into sentences by ., !, ?
         sentences = re.split(r"[.!?]\s+", reply)
@@ -208,6 +208,7 @@ def call_bedrock_claude(user_msg: str) -> str:
         reply = ". ".join(sentences[:2]).rstrip(".") + "."
 
         return reply
+
 
     except Exception as e:
         logging.error("bedrock error: %s", e)
