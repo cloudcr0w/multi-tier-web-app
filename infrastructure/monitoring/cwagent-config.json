@@ -1,0 +1,41 @@
+{
+  "metrics": {
+    "metrics_collected": {
+      "cpu": {
+        "measurement": [
+          {"name": "cpu_usage_idle", "rename": "CPU_IDLE", "unit": "Percent"},
+          {"name": "cpu_usage_user", "rename": "CPU_USER", "unit": "Percent"},
+          {"name": "cpu_usage_system", "rename": "CPU_SYSTEM", "unit": "Percent"}
+        ],
+        "metrics_collection_interval": 60
+      },
+      "mem": {
+        "measurement": [
+          {"name": "mem_used_percent", "rename": "MEM_USED_PERCENT", "unit": "Percent"}
+        ],
+        "metrics_collection_interval": 60
+      }
+    }
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/messages",
+            "log_group_name": "myapp-system-logs",
+            "log_stream_name": "{hostname}-messages",
+            "timestamp_format": "%b %d %H:%M:%S"
+          },
+          {
+            "file_path": "/var/log/myapp.log",
+            "log_group_name": "myapp-app-logs",
+            "log_stream_name": "{hostname}-app",
+            "timestamp_format": "%Y-%m-%d %H:%M:%S"
+          }
+        ]
+      }
+    },
+    "log_stream_name": "appLogStream"
+  }
+}
