@@ -18,6 +18,7 @@ logging.basicConfig(level=logging.INFO)
 RATE_TABLE        = os.getenv("RATE_TABLE", "chat_rate_limits")  # DynamoDB table name
 RATE_WINDOW_SEC   = int(os.getenv("RATE_WINDOW_SEC", "60"))      # length of the fixed window (in seconds)
 RATE_MAX_REQUESTS = int(os.getenv("RATE_MAX_REQUESTS", "12"))    # max requests per IP per window
+MOCK_MODE = os.getenv("MOCK_MODE", "false").lower() == "true"
 
 # -------------------------------------------------------------------
 # Application-level guards
@@ -48,7 +49,7 @@ def get_secret() -> Dict[str, str]:
 secrets = get_secret()
 SYSTEM_PROMPT = secrets.get("SYSTEM_PROMPT", "")
 MODEL_ID      = secrets.get("MODEL_ID", "")
-# Note: Bedrock Runtime does not require an API key → do not store it
+
 
 # -------------------------------------------------------------------
 # AWS clients
@@ -130,7 +131,7 @@ def check_rate_limit(ip: str) -> Tuple[bool, int]:
 #   - enforced max input length
 #   - blocklist filter
 #   - style constraints (concise answers, user’s language)
-#   - hard cap of ~3 sentences in the output
+#   - hard cap of ~2 sentences in the output
 # -------------------------------------------------------------------
 def call_bedrock_claude(user_msg: str) -> str:
     user_msg = normalize_text(user_msg)[:MAX_INPUT_CHARS]
@@ -138,27 +139,34 @@ def call_bedrock_claude(user_msg: str) -> str:
         return "Please ask a question about Adam's projects or skills."
     if is_blocked(user_msg):
         return "I can’t process that request. Please keep it professional and ask about Adam’s work."
-
+    
+     # --- MOCK MODE ---
+    if MOCK_MODE:
+        logging.info("MOCK_MODE enabled → skipping Bedrock call.")
+        return f"[MOCK REPLY] You asked: '{user_msg}'. This is a demo response."
+    
     body = {
         "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 220,
+        "max_tokens": 50,
         "temperature": 0.3,
         "top_p": 0.9,
         "stop_sequences": ["\n\nUser:"],
         "system": [
-            {
-                "type": "text",
-                "text": (
-                    f"{SYSTEM_PROMPT}\n\n"
-                    f"{ALLOWED_TOPICS_HINT}\n"
-                    "Style:\n"
-                    "- Be concise (usually 2–3 sentences).\n"
-                    "- Avoid lists unless the user asks.\n"
-                    "- End with one short next-step suggestion when helpful.\n"
-                    "- Always reply in the user's language."
-                ),
-            }
-        ],
+        {
+        "type": "text",
+        "text": (
+            f"{SYSTEM_PROMPT}\n\n"
+            f"{ALLOWED_TOPICS_HINT}\n"
+            "Style:\n"
+            "- STRICT: Answer in 1–2 sentences only.\n"
+            "- Keep it natural, like casual chat.\n"
+            "- Never expand into long explanations.\n"
+            "- Avoid lists unless explicitly asked.\n"
+            "- Always reply in the user's language."
+            ),
+        }
+],
+
         "messages": [
             {"role": "user", "content": [{"type": "text", "text": user_msg}]}
         ],
@@ -183,15 +191,42 @@ def call_bedrock_claude(user_msg: str) -> str:
         if not reply:
             return "I couldn’t parse the model response."
 
-        # Hard trim: keep at most 3 sentences
-        sentences = [s.strip() for s in reply.split(". ") if s.strip()]
-        if len(sentences) > 3:
-            reply = ". ".join(sentences[:3]).rstrip(".") + "."
+        # --- Force short output ---
+        # Normalize reply
+        reply = reply.strip()
+        sentences = re.split(r"[.!?]\s+", reply)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        if len(sentences) > 2:
+            reply = ". ".join(sentences[:2]).rstrip(".") + "."
+
+
+        # Split into sentences by ., !, ?
+        sentences = re.split(r"[.!?]\s+", reply)
+        sentences = [s.strip() for s in sentences if s.strip()]
+
+        # Always keep max 2 sentences
+        reply = ". ".join(sentences[:2]).rstrip(".") + "."
 
         return reply
+
     except Exception as e:
         logging.error("bedrock error: %s", e)
         return "Temporary error. Please try again in a moment."
+    
+def get_origin(event):
+    """Reflect only allowed origins; allow localhost in dev and your prod domain."""
+    headers = { (k or "").lower(): v for k, v in (event.get("headers") or {}).items() }
+    origin = headers.get("origin", "")
+    allowlist = {"http://localhost:5500", "https://crow-project.click", "http://crow-project.click"}
+    # if request comes from an allowed origin, reflect it back; else fall back to prod
+    return origin if origin in allowlist else "https://crow-project.click"
+
+def get_method(event) -> str:
+    """Work for both REST API (httpMethod) and HTTP API (requestContext.http.method)."""
+    m = event.get("httpMethod")
+    if not m:
+        m = (event.get("requestContext", {}).get("http", {}) or {}).get("method")
+    return (m or "").upper()
 
 # -------------------------------------------------------------------
 # Lambda handler
@@ -204,12 +239,13 @@ def call_bedrock_claude(user_msg: str) -> str:
 # -------------------------------------------------------------------
 def lambda_handler(event, context):
     try:
+        origin = get_origin(event)
         # --- CORS preflight (OPTIONS request) ---
         if event.get("httpMethod") == "OPTIONS":
             return {
                 "statusCode": 204,
                 "headers": {
-                    "Access-Control-Allow-Origin": os.getenv("CORS_ORIGIN", "*"),
+                    "Access-Control-Allow-Origin": get_origin(event),
                     "Access-Control-Allow-Methods": "POST, OPTIONS",
                     "Access-Control-Allow-Headers": "Content-Type",
                 },
@@ -223,7 +259,7 @@ def lambda_handler(event, context):
         ip = get_client_ip(event)
         allowed, remaining = check_rate_limit(ip)
         if not allowed:
-            origin = os.getenv("CORS_ORIGIN", "*")
+            origin = get_origin(event)
             return {
                 "statusCode": 429,
                 "headers": {
@@ -240,7 +276,7 @@ def lambda_handler(event, context):
         reply = call_bedrock_claude(user_message) if user_message else \
                 "Please ask a question about Adam's projects or skills."
 
-        origin = os.getenv("CORS_ORIGIN", "*")
+        origin = get_origin(event)
         return {
             "statusCode": 200,
             "headers": {
@@ -262,7 +298,7 @@ def lambda_handler(event, context):
             "statusCode": 500,
             "headers": {
                 "Content-Type": "application/json; charset=utf-8",
-                "Access-Control-Allow-Origin": os.getenv("CORS_ORIGIN", "*"),
+                "Access-Control-Allow-Origin": get_origin(event),
             },
             "body": json.dumps({"error": "Server error"}),
         }
