@@ -113,6 +113,13 @@ Integrated **AI chatbot** on the frontend – deployed via **AWS Lambda + API Ga
 
 👉 Try it live: [https://crow-project.click](https://crow-project.click)  
 
+### 🔒 AWS WAF (removed due to cost optimization)
+Initially, I integrated **AWS WAF** with my CloudFront distribution to experiment with security rules.  
+However, even a basic Web ACL generated a fixed monthly cost (~$6), which was not justified for a personal demo project.  
+
+➡️ I decided to **remove the WAF** and document this step as part of my **cost-awareness and cloud governance** practice.  
+This shows that I not only test advanced AWS features but also evaluate **security vs. cost trade-offs** in real projects.
+
 
 ## 📌 What's Next?
 See FUTURE_PLANS.md for upcoming improvements:
