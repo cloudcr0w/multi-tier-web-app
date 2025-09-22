@@ -82,7 +82,7 @@ Then visit: http://localhost:3000
 Website: https://crow-project.click
 Try it: Contact form submits data to RDS via backend API.
 
-##🔧 AWS Services Used
+## 🔧 AWS Services Used
 
 EC2 – Backend hosting
 
@@ -113,12 +113,20 @@ Integrated **AI chatbot** on the frontend – deployed via **AWS Lambda + API Ga
 
 👉 Try it live: [https://crow-project.click](https://crow-project.click)  
 
-### 🔒 AWS WAF (removed due to cost optimization)
-Initially, I integrated **AWS WAF** with my CloudFront distribution to experiment with security rules.  
-However, even a basic Web ACL generated a fixed monthly cost (~$6), which was not justified for a personal demo project.  
+## 💰 Cost Optimization
 
-➡️ I decided to **remove the WAF** and document this step as part of my **cost-awareness and cloud governance** practice.  
-This shows that I not only test advanced AWS features but also evaluate **security vs. cost trade-offs** in real projects.
+During September 2025, AWS costs increased unexpectedly due to active **RDS** and **EC2** instances running outside the Free Tier period.  
+To reduce recurring monthly costs, the architecture was optimized:
+
+- ❌ **Removed RDS (MySQL)** → replaced with a lightweight storage solution (S3/DynamoDB/SES for contact form).  
+- ❌ **Stopped EC2 backend** → static frontend is now served via **S3 + CloudFront**.  
+- ❌ **Removed WAF** → unnecessary for a personal portfolio project, security handled with CloudFront + HTTPS headers.  
+- ❌ **Removed NAT Gateway** → replaced with **VPC Endpoints** where needed.  
+- ✅ **Kept Route 53 + ACM** → domain and SSL certificate remain active.  
+
+**Result:**  
+Monthly costs dropped from ~27 USD → ~3 USD, while keeping the application publicly available at  
+👉 [https://crow-project.click](https://crow-project.click)
 
 
 ## 📌 What's Next?
