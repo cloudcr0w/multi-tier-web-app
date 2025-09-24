@@ -6,8 +6,8 @@
 
 This project is a portfolio application showcasing a multi-tier architecture on AWS:
 
-- Backend: **Node.js** & **Express** on **EC2**
-- Database: **MySQL on RDS**
+- Backend: **Node.js** & **Express** on **EC2** *(migrated off in Sept 2025)*
+- Database: **MySQL on RDS** *(removed in Sept 2025 for cost optimization)*
 - Frontend: **Static website** on **S3 + CloudFront**
 - Domain: **Route 53 + SSL via ACM**
 - IaC: **CloudFormation**
@@ -19,13 +19,40 @@ This project is a portfolio application showcasing a multi-tier architecture on 
 ## 🚀 Features
 
 - ✅ RESTful API (Express)
-- ✅ MySQL on AWS RDS
+- ✅ MySQL on AWS RDS *(removed)*
 - ✅ Static frontend on S3 with CloudFront
 - ✅ SSL certificate (HTTPS)
 - ✅ Visitor tracking with API Gateway + Lambda
 - ✅ Dockerized backend
 - ✅ CloudWatch alarms & dashboard
-- 🛠️ Planned: CI/CD, WAF, ECS/EKS, Secrets Manager
+- 🛠️ Planned: CI/CD, ECS/EKS, Secrets Manager
+
+---
+
+## 💻 Deployment
+
+As of **September 2025**, the application was optimized to reduce AWS costs:
+
+- **Frontend** is deployed on **S3 + CloudFront** (with Route 53 + ACM for domain and SSL).
+- **Backend & RDS** were decommissioned to minimize costs, while preserving functionality through AWS serverless services (Lambda + SNS/S3 planned for contact form).
+- **CloudFront distribution** serves all static assets and enforces HTTPS.
+- **Domain**: still accessible under 👉 [https://crow-project.click](https://crow-project.click).
+
+---
+
+## 💰 Cost Optimization
+
+During September 2025, AWS costs increased due to **RDS** and **EC2** instances running outside the Free Tier.  
+To minimize recurring costs:
+
+- ❌ **Removed RDS (MySQL)** → replaced with lightweight serverless solutions (planned: S3/DynamoDB/SES).  
+- ❌ **Stopped EC2 backend** → static frontend now runs on **S3 + CloudFront**.  
+- ❌ **Removed WAF** → unnecessary for a portfolio project.  
+- ❌ **Removed NAT Gateway** → replaced with **VPC Endpoints** where needed.  
+- ✅ **Kept Route 53 + ACM** → domain and SSL certificate remain active.  
+
+**Result:**  
+Monthly costs dropped from ~27 USD → ~3 USD, while the application is still publicly available.
 
 ---
 
@@ -50,7 +77,7 @@ Includes **CloudFormation** templates for:
 
 CloudWatch Dashboard includes:
 
-- EC2 CPU usage
+- EC2 CPU usage *(legacy)*
 - API response times (`MultiTierApp/ResponseTime`)
 - Lambda `trackVisit` metrics:
   - Invocations
@@ -61,46 +88,15 @@ CloudWatch Dashboard includes:
   - Latency
   - Count
 - SNS alerts for CPU spikes
-<!-- screenshots from cloudwatch would be available soon  -->
-<!-- Defined in [`cloudwatch-dashboard.yml`](infrastructure/cloudformation/cloudwatch-dashboard.yml) -->
 
-<!-- > Example view:
-> ![CloudWatch Dashboard Preview](./dashboard-preview.png) -->
-
-
-## 🐳 Docker
-
-```bash
-docker build -t my-backend-app .
-docker run -p 3000:3000 my-backend-app
-```
-
-Then visit: http://localhost:3000
-
+---
 
 ## 🌐 Live Demo
-Website: https://crow-project.click
-Try it: Contact form submits data to RDS via backend API.
+Website: https://crow-project.click  
+Currently hosting static frontend via **S3 + CloudFront**.  
+*Contact form backend migration in progress (Lambda + S3 + SNS).*
 
-## 🔧 AWS Services Used
-
-EC2 – Backend hosting
-
-S3 – Static frontend
-
-CloudFront – CDN for frontend
-
-Route 53 – DNS & domain
-
-RDS – MySQL DB
-
-ACM – SSL certificates
-
-API Gateway + Lambda – Visitor tracking
-
-CloudWatch + SNS – Metrics, alerts
-
-CloudFormation – Infrastructure as Code
+---
 
 ## 🤖 AI Chatbot
 
@@ -113,41 +109,25 @@ Integrated **AI chatbot** on the frontend – deployed via **AWS Lambda + API Ga
 
 👉 Try it live: [https://crow-project.click](https://crow-project.click)  
 
-## 💰 Cost Optimization
-
-During September 2025, AWS costs increased unexpectedly due to active **RDS** and **EC2** instances running outside the Free Tier period.  
-To reduce recurring monthly costs, the architecture was optimized:
-
-- ❌ **Removed RDS (MySQL)** → replaced with a lightweight storage solution (S3/DynamoDB/SES for contact form).  
-- ❌ **Stopped EC2 backend** → static frontend is now served via **S3 + CloudFront**.  
-- ❌ **Removed WAF** → unnecessary for a personal portfolio project, security handled with CloudFront + HTTPS headers.  
-- ❌ **Removed NAT Gateway** → replaced with **VPC Endpoints** where needed.  
-- ✅ **Kept Route 53 + ACM** → domain and SSL certificate remain active.  
-
-**Result:**  
-Monthly costs dropped from ~27 USD → ~3 USD, while keeping the application publicly available at  
-👉 [https://crow-project.click](https://crow-project.click)
-
+---
 
 ## 📌 What's Next?
 See FUTURE_PLANS.md for upcoming improvements:
 
-Auto Scaling, ALB
+- Auto Scaling, ALB
+- GitHub Actions (CI/CD)
+- ECS or EKS deployment
+- WAF rule sets
+- Secrets Manager or Parameter Store
+- Serverless contact form (Lambda + S3 + SNS/SES)
 
-GitHub Actions (CI/CD)
-
-ECS or EKS deployment
-
-WAF rule sets
-
-Secrets Manager or Parameter Store
+---
 
 ## 🧠 Project Goals
-Showcase AWS multi-tier design
-
-Demonstrate backend + infrastructure skills
-
-Emphasize real integrations with IaC, monitoring, and SSL
+Showcase AWS multi-tier design  
+Demonstrate backend + infrastructure skills  
+Emphasize real integrations with IaC, monitoring, and SSL  
+Highlight cost optimization and real-world cloud governance
 
 ---
 
