@@ -1,160 +1,149 @@
+// === Chat, Form & UI Logic ===
+
+// Elements
 const chatMessages = document.getElementById("chat-messages");
 const chatInput = document.getElementById("chat-input");
 const chatSend = document.getElementById("chat-send");
 
-document.addEventListener('DOMContentLoaded', () => {
-    const welcomeScreen = document.getElementById('welcome-screen')
-    const mainContent = document.getElementById('main-content')
-    const welcomeButton = document.getElementById('welcome-button')
-    const chatContainer = document.getElementById('chat-container'); 
+// === Welcome Screen Handling ===
+document.addEventListener("DOMContentLoaded", () => {
+  const welcomeScreen = document.getElementById("welcome-screen");
+  const mainContent = document.getElementById("main-content");
+  const welcomeButton = document.getElementById("welcome-button");
+  const chatContainer = document.getElementById("chat-container");
 
-    // Handle click on the welcome button
-    welcomeButton.addEventListener('click', () => {
-        // Hide the welcome screen
-        welcomeScreen.classList.add('hidden')
+  // Switch from welcome screen to main content
+  welcomeButton.addEventListener("click", () => {
+    welcomeScreen.classList.add("hidden");
 
-        // Display the main content and chatbot after the transition
-        setTimeout(() => {
-            welcomeScreen.style.display = 'none'
-            mainContent.style.display = 'block'
-            chatContainer.style.display = 'block'; // Show chatbot after delay
-            setTimeout(() => {
-                chatContainer.classList.add('show'); // Add the class to trigger animation
-            }, 500); // Delay the chatbot appearance
-            mainContent.classList.add('fade-in')
-        }, 500) // Match the CSS transition duration
-    })
-})
-// JavaScript to set the current year
-document.getElementById('current-year').textContent = new Date().getFullYear()
-
-// Backend API endpoint
-const backendUrl = 'https://d34d0xv55dvwew.cloudfront.net/api/contact'
-
-
-
-// scroll-up button
-const scrollTopBtn = document.getElementById('scroll-top-btn');
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        scrollTopBtn.classList.add('show');
-        scrollTopBtn.classList.remove('hide');
-    } else {
-        scrollTopBtn.classList.add('hide');
-        scrollTopBtn.classList.remove('show');
-    }
+    setTimeout(() => {
+      welcomeScreen.style.display = "none";
+      mainContent.style.display = "block";
+      chatContainer.style.display = "block"; 
+      setTimeout(() => {
+        chatContainer.classList.add("show"); 
+      }, 500); 
+      mainContent.classList.add("fade-in");
+    }, 500);
+  });
 });
 
-scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    scrollTopBtn.classList.add('hide');
-    scrollTopBtn.classList.remove('show');
+// === Set current year ===
+document.getElementById("current-year").textContent = new Date().getFullYear();
+
+// === Contact Form API endpoint ===
+const formUrl = "https://14ma9cvufd.execute-api.us-east-1.amazonaws.com/contact";
+
+// === Scroll-to-top button ===
+const scrollTopBtn = document.getElementById("scroll-top-btn");
+
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 300) {
+    scrollTopBtn.classList.add("show");
+    scrollTopBtn.classList.remove("hide");
+  } else {
+    scrollTopBtn.classList.add("hide");
+    scrollTopBtn.classList.remove("show");
+  }
 });
 
-// Handle form submission
+scrollTopBtn.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  scrollTopBtn.classList.add("hide");
+  scrollTopBtn.classList.remove("show");
+});
+
+// === Contact Form Submission ===
 async function sendMessage(event) {
-	event.preventDefault() // Prevent default form submission behavior
+  event.preventDefault(); // Prevent default form submit
 
-	// Get input values from the form
-	const name = document.getElementById('name').value.trim()
-	const email = document.getElementById('email').value.trim()
-	const message = document.getElementById('message').value.trim()
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const message = document.getElementById("message").value.trim();
 
-	// Validate the inputs
-	if (!name || !email || !message) {
-		showPopup('Please fill out all fields.', 'error')
-		return
-	}
+  if (!name || !email || !message) {
+    showPopup("Please fill out all fields.", "error");
+    return;
+  }
 
-	// Show loading indicator
-	const loading = document.getElementById('loading')
-	loading.textContent = 'Sending...' // Ensure correct text
-	loading.classList.remove('hidden')
+  const loading = document.getElementById("loading");
+  loading.textContent = "Sending...";
+  loading.classList.remove("hidden");
 
-	// Hide any previous messages
-	const formMessage = document.getElementById('form-message')
-	formMessage.classList.add('hidden')
+  const formMessage = document.getElementById("form-message");
+  formMessage.classList.add("hidden");
 
-	try {
-		// Send form data to the backend API
-		const response = await fetch(backendUrl, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ name, email, message }),
-		})
+  try {
+    const response = await fetch(formUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, message })
+    });
 
-		// Handle the response
-		if (response.ok) {
-			showPopup('Message sent successfully!', 'success')
-			clearForm()
-		} else {
-			const errorData = await response.json()
-			const errorMessage = errorData.error || 'Failed to send message'
-			showPopup(`Error: ${errorMessage}`, 'error')
-		}
-	} catch (error) {
-		// Handle network or unexpected errors
-		console.error('Error sending message:', error)
-		showPopup('A network error occurred. Please try again later.', 'error')
-	} finally {
-		// Hide the loading indicator
-		loading.classList.add('hidden')
-		loading.textContent = '' // Reset the text
-	}
+    if (response.ok) {
+      showPopup("Message sent successfully!", "success");
+      clearForm();
+    } else {
+      const errorData = await response.json();
+      const errorMessage = errorData.error || "Failed to send message";
+      showPopup(`Error: ${errorMessage}`, "error");
+    }
+  } catch (error) {
+    console.error("Error sending message:", error);
+    showPopup("A network error occurred. Please try again later.", "error");
+  } finally {
+    loading.classList.add("hidden");
+    loading.textContent = "";
+  }
 }
 
-// Show a popup message
+// === Show popup messages (success/error) ===
 function showPopup(message, type) {
-	// Create a new popup element
-	const popup = document.createElement('div')
-	popup.className = `popup ${type}`
-	popup.textContent = message
+  const popup = document.createElement("div");
+  popup.className = `popup ${type}`;
+  popup.textContent = message;
+  document.body.appendChild(popup);
 
-	// Append the popup to the body
-	document.body.appendChild(popup)
-
-	// Remove the popup after 3 seconds
-	setTimeout(() => {
-		popup.classList.add('removing') // Trigger fade-out animation
-		setTimeout(() => {
-			popup.remove() // Remove from the DOM after the animation
-		}, 500) // Match the animation duration
-	}, 3000)
+  setTimeout(() => {
+    popup.classList.add("removing");
+    setTimeout(() => {
+      popup.remove();
+    }, 500);
+  }, 3000);
 }
 
-// Clear form inputs
+// === Clear form fields ===
 function clearForm() {
-	document.getElementById('name').value = ''
-	document.getElementById('email').value = ''
-	document.getElementById('message').value = ''
+  document.getElementById("name").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("message").value = "";
 }
 
-// Add event listener for form submission
-document.getElementById('contact-form').addEventListener('submit', sendMessage)
+// Bind form submit
+document.getElementById("contact-form").addEventListener("submit", sendMessage);
 
-// Toggle visibility with smooth transition
-document.querySelectorAll('.toggle-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const project = button.closest('.project')
-        const details = project.querySelector('.project-details')
-        const isExpanded = details.classList.contains('expanded')
+// === Expand/Collapse project details ===
+document.querySelectorAll(".toggle-btn").forEach(button => {
+  button.addEventListener("click", () => {
+    const project = button.closest(".project");
+    const details = project.querySelector(".project-details");
+    const isExpanded = details.classList.contains("expanded");
 
-        details.classList.toggle('expanded')
-        button.textContent = isExpanded ? 'Show More ⬇️' : 'Show Less ⬆️'
-    })
-})
+    details.classList.toggle("expanded");
+    button.textContent = isExpanded ? "Show More ⬇️" : "Show Less ⬆️";
+  });
+});
 
+// === Page visit tracker ===
 fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ page: "home" })
 });
 
-// === CHATBOT ===
+// === Chatbot logic (unchanged, already working) ===
 (function () {
   const chatBackendUrl = "https://fpibcdob4c.execute-api.us-east-1.amazonaws.com/chat";
-
   const $messages  = document.getElementById("chat-messages");
   const $input     = document.getElementById("chat-input");
   const $send      = document.getElementById("chat-send");
@@ -165,11 +154,10 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
     return;
   }
 
-  // Fade-in effect on page load
   window.addEventListener("load", () => {
     setTimeout(() => {
       $container.classList.add("show");
-      $container.classList.add("bar"); // collapsed state on start
+      $container.classList.add("bar");
       resetInactivityTimer();
     }, 800);
   });
@@ -202,17 +190,14 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   }
 
   let busy = false;
-
-  // --- Cooldown setup ---
   let lastRequestTime = 0;
-  const COOLDOWN_MS = 2000; // 2 sekundy przerwy
+  const COOLDOWN_MS = 2000;
 
   async function sendChat() {
     if (busy) return;
     const text = ($input.value || "").trim();
     if (!text) return;
 
-    // --- Cooldown ---
     const now = Date.now();
     if (now - lastRequestTime < COOLDOWN_MS) {
       addMessage("⚠️ Please wait a moment before asking again.", "bot");
@@ -220,7 +205,6 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
     }
     lastRequestTime = now;
 
-    // --- Limit długości pytania ---
     if (text.length > 50) {
       addMessage("⚠️ Your question is too long (max 50 chars).", "bot");
       return;
@@ -259,27 +243,26 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
       removeTypingIndicator();
       addMessage("⚠️ Network error. Please try again.", "bot");
     } finally {
-      setTimeout(() => { busy = false; }, 700); // debounce
+      setTimeout(() => { busy = false; }, 700);
       resetInactivityTimer();
     }
   }
 
-  // --- Auto-collapse after inactivity ---
   const INACTIVITY_SECS = 6;
   let inactivityTimer = null;
 
-  function openChat(){
+  function openChat() {
     $container.classList.remove("bar");
     $container.classList.add("open");
   }
 
-  function closeChat(){
+  function closeChat() {
     if (document.activeElement === $input) $input.blur();
     $container.classList.remove("open");
-    $container.classList.add("bar"); // back to collapsed bar
+    $container.classList.add("bar");
   }
 
-  function resetInactivityTimer(){
+  function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
       const hovering = $container.matches(":hover");
@@ -288,21 +271,18 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
     }, INACTIVITY_SECS * 1000);
   }
 
-  // Open chat on any activity inside widget
-  ["mousemove","keydown","wheel","touchstart"].forEach(ev => {
+  ["mousemove", "keydown", "wheel", "touchstart"].forEach(ev => {
     $container.addEventListener(ev, () => {
       openChat();
       resetInactivityTimer();
     }, { passive: true });
   });
 
-  // Focus/hover on input or messages keeps it open
   [$input, $messages].forEach(el => {
     el.addEventListener("focus", () => { openChat(); resetInactivityTimer(); });
     el.addEventListener("mouseenter", () => { openChat(); resetInactivityTimer(); });
   });
 
-  // Enter-to-send
   $input.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -312,10 +292,8 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
     }
   });
 
-  // Send button click
   $send.addEventListener("click", () => { sendChat(); });
 
-  // Click on container background focuses input
   $container.addEventListener("click", (e) => {
     if (e.target === $container || e.target.classList.contains("chat-messages")) {
       $input.focus();
