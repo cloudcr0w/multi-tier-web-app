@@ -2,6 +2,10 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Serverless Contact Form - Lambda + S3 + SNS + API Gateway
 
 Parameters:
+  AppRegion:
+    Type: String
+    Default: us-east-1
+    Description: AWS region for deployment
   NotificationEmail:
     Type: String
     Default: "adamwronowy@gmail.com"
