@@ -712,11 +712,11 @@ footer p #current-year {
 .chat-input{
   width: 100%;
   border: none;
-  padding: 10px;
+  padding: 9px;
   font-size: 14px;
   background: rgba(255,255,255,.10);
   color: #fff;
-  border-radius: 5px;
+  border-radius: 6px;
   outline: none;
   transition: background-color .3s, box-shadow .3s;
   box-sizing: border-box;
