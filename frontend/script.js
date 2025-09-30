@@ -159,6 +159,7 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
       $container.classList.add("show");
       $container.classList.add("bar");
       resetInactivityTimer();
+      scrollToBottom();
     }, 800);
   });
 
