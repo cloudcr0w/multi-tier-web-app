@@ -212,6 +212,7 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
     }
 
     busy = true;
+    $send.disabled = true;
     addMessage(text, "user");
     openChat();
     $input.value = "";
@@ -245,6 +246,7 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
       addMessage("⚠️ Network error. Please try again.", "bot");
     } finally {
       setTimeout(() => { busy = false; }, 700);
+      $send.disabled = false;
       resetInactivityTimer();
     }
   }
