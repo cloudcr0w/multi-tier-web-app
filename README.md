@@ -110,6 +110,17 @@ Integrated **AI chatbot** on the frontend – deployed via **AWS Lambda + API Ga
 👉 Try it live: [https://crow-project.click](https://crow-project.click)  
 
 ---
+## 📈 Monitoring & Observability
+
+CloudWatch Dashboard includes:
+
+- EC2 CPU usage *(legacy)*
+- API response times (`MultiTierApp/ResponseTime`)
+- Lambda `trackVisit` metrics
+
+### Screenshots (coming soon)
+![Monitoring Screenshot Placeholder](./monitoring-dashboard.png)
+
 
 ## 📌 What's Next?
 See FUTURE_PLANS.md for upcoming improvements:

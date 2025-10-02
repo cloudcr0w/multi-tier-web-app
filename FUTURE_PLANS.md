@@ -11,8 +11,8 @@
 - Add ALB + Auto Scaling Group for backend
 - Migrate containers to ECS Fargate or Amazon EKS
 
-## chatbot MVP 
-- UI + Lambda + API Gateway
+## 🤖 Chatbot MVP
+- Frontend UI + AWS Lambda + API Gateway
 
 ## Monitoring
 - Add memory/disk usage to CloudWatch Dashboard
@@ -23,6 +23,11 @@
 - New Lambda + API Gateway stack for tracking visits (`visit-tracker.yml`)
 - Add DynamoDB storage for analytics
 - Dashboard for visit metrics
+
+## 💰 Cost Optimization
+- Evaluate DynamoDB on-demand vs provisioned capacity
+- Use CloudFront caching policies to reduce Lambda/API Gateway invocations
+- Consider Graviton2/3 instances for backend (if re-enabled)
 
 ---
 
