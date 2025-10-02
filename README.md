@@ -3,6 +3,9 @@
 📄 [🇵🇱 Zobacz wersję po polsku](README_PL.md)
 
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=cloudcr0w.multi-tier-web-app)
+![AWS](https://img.shields.io/badge/Cloud-AWS-FF9900?logo=amazon-aws)
+![CI/CD](https://img.shields.io/badge/CI/CD-GitHub%20Actions-2088FF?logo=githubactions)
+
 
 This project is a portfolio application showcasing a multi-tier architecture on AWS:
 
