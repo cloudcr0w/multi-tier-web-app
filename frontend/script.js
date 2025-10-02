@@ -296,7 +296,7 @@ fetch("https://67h17n0zlb.execute-api.us-east-1.amazonaws.com/prod/track", {
   });
 
   $send.addEventListener("click", () => { sendChat(); });
-
+  console.log("[chat] Chat initialized successfully");
   $container.addEventListener("click", (e) => {
     if (e.target === $container || e.target.classList.contains("chat-messages")) {
       $input.focus();
