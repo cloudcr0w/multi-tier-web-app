@@ -27,6 +27,8 @@
 - Add memory/disk usage to CloudWatch Dashboard
 - Track 5xx errors and API latency
 - Include API Gateway metrics
+- Long-term goal: export CloudWatch metrics to Prometheus
+- Visualize metrics with Grafana dashboards
 
 ## Visitor Tracking
 - New Lambda + API Gateway stack for tracking visits (`visit-tracker.yml`)
