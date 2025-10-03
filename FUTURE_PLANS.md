@@ -2,10 +2,19 @@
 
 ## CI/CD
 - GitHub Actions or AWS CodePipeline for automatic deployments
+- Add automated tests before deploy
+- Include Terraform plan & apply stages
+- Notify via Slack on deployment status
 
 ## Security Enhancements
 - Store secrets in AWS Secrets Manager / SSM Parameter Store
 - Extend AWS WAF rules for better threat mitigation
+- Store secrets in AWS Secrets Manager / SSM Parameter Store
+  - Rotate API keys automatically
+  - Use KMS encryption for sensitive values
+- Extend AWS WAF rules for better threat mitigation
+  - Block common OWASP Top 10 attacks
+  - Add rate limiting for API Gateway
 
 ## Scaling and High Availability
 - Add ALB + Auto Scaling Group for backend
