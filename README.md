@@ -93,6 +93,16 @@ CloudWatch Dashboard includes:
 - SNS alerts for CPU spikes
 
 ---
+## 🖥️ Run Locally
+
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/cloudcr0w/multi-tier-web-app.git
+cd multi-tier-web-app/frontend
+npm install
+npm start
+```
 
 ## 🌐 Live Demo
 Website: https://crow-project.click  
