@@ -6,11 +6,10 @@
 ![AWS](https://img.shields.io/badge/Cloud-AWS-FF9900?logo=amazon-aws)
 ![CI/CD](https://img.shields.io/badge/CI/CD-GitHub%20Actions-2088FF?logo=githubactions)
 
-
 Ten projekt to aplikacja portfolio prezentująca architekturę wielowarstwową w AWS:
 
-- Backend: **Node.js** & **Express** na **EC2**
-- Baza danych: **MySQL na RDS**
+- Backend: **Node.js** & **Express** na **EC2** *(wyłączony we wrześniu 2025)*
+- Baza danych: **MySQL na RDS** *(usunięta we wrześniu 2025 w ramach optymalizacji kosztów)*
 - Frontend: **Statyczna strona** na **S3 + CloudFront**
 - Domeny: **Route 53 + SSL (ACM)**
 - IaC: **CloudFormation**
@@ -22,13 +21,40 @@ Ten projekt to aplikacja portfolio prezentująca architekturę wielowarstwową w
 ## 🚀 Funkcjonalności
 
 - ✅ RESTful API (Express)
-- ✅ MySQL na AWS RDS
+- ✅ MySQL na AWS RDS *(usunięty)*
 - ✅ Statyczny frontend na S3 z CloudFront
 - ✅ Certyfikat SSL (HTTPS)
 - ✅ Śledzenie wizyt z API Gateway + Lambda
 - ✅ Backend w kontenerze Docker
 - ✅ Alarmy i dashboard CloudWatch
-- 🛠️ Planowane: CI/CD, WAF, ECS/EKS, Secrets Manager
+- 🛠️ Planowane: CI/CD, ECS/EKS, Secrets Manager
+
+---
+
+## 💻 Wdrożenie
+
+Na dzień **wrzesień 2025** aplikacja została zoptymalizowana pod kątem kosztów:
+
+- **Frontend** działa na **S3 + CloudFront** (z Route 53 + ACM dla domeny i SSL).
+- **Backend i RDS** zostały wyłączone, aby ograniczyć koszty — funkcjonalność ma być odtworzona poprzez usługi serverless (Lambda + SNS/S3 dla formularza kontaktowego).
+- **CloudFront** serwuje wszystkie statyczne zasoby i wymusza HTTPS.
+- **Domena**: wciąż dostępna 👉 [https://crow-project.click](https://crow-project.click).
+
+---
+
+## 💰 Optymalizacja kosztów
+
+We wrześniu 2025 koszty AWS wzrosły ze względu na instancje **RDS** i **EC2** działające poza Free Tier.  
+Aby je zminimalizować:
+
+- ❌ **Usunięto RDS (MySQL)** → planowane zastąpienie rozwiązaniami serverless (S3/DynamoDB/SES).  
+- ❌ **Wyłączono backend EC2** → frontend statyczny działa teraz na **S3 + CloudFront**.  
+- ❌ **Usunięto WAF** → zbędny dla projektu portfolio.  
+- ❌ **Usunięto NAT Gateway** → zastąpiony przez **VPC Endpoints** tam, gdzie potrzebne.  
+- ✅ **Pozostawiono Route 53 + ACM** → domena i certyfikat SSL nadal aktywne.  
+
+**Efekt:**  
+Miesięczne koszty spadły z ~27 USD → ~3 USD, a aplikacja jest nadal publicznie dostępna.
 
 ---
 
@@ -53,7 +79,7 @@ Repozytorium zawiera szablony **CloudFormation**:
 
 Dashboard w CloudWatch zawiera m.in.:
 
-- Użycie CPU na EC2
+- Użycie CPU na EC2 *(legacy)*
 - Czas odpowiedzi API (`MultiTierApp/ResponseTime`)
 - Metryki Lambdy `trackVisit`:
   - Liczba wywołań
@@ -64,99 +90,80 @@ Dashboard w CloudWatch zawiera m.in.:
   - Latencja
   - Liczba requestów
 - Alerty SNS dla skoków CPU
-<!-- zrzuty ekranu z CloudWatch pojawią się wkrótce  -->
-<!-- Zdefiniowane w [`cloudwatch-dashboard.yml`](infrastructure/cloudformation/cloudwatch-dashboard.yml) -->
+
+### Zrzuty ekranu *(wkrótce)*
+![Monitoring Screenshot Placeholder](./monitoring-dashboard.png)
 
 ---
 
-## 🐳 Docker
+## 🖥️ Uruchomienie lokalne
+
+Sklonuj repozytorium i zainstaluj zależności:
 
 ```bash
-docker build -t my-backend-app .
-docker run -p 3000:3000 my-backend-app
+git clone https://github.com/cloudcr0w/multi-tier-web-app.git
+cd multi-tier-web-app/frontend
+npm install
+npm start
 ```
 
-Następnie odwiedź: http://localhost:3000
+Domyślnie aplikacja działa pod adresem http://localhost:3000
+
+---
 
 ## 🌐 Demo online
 
-Strona: https://crow-project.click
-
-Wypróbuj: formularz kontaktowy przesyła dane do RDS przez backend API.
-
-## 🔧 Usługi AWS użyte w projekcie
-
-EC2 – hosting backendu
-
-S3 – statyczny frontend
-
-CloudFront – CDN dla frontendu
-
-Route 53 – DNS i domena
-
-RDS – baza danych MySQL
-
-ACM – certyfikaty SSL
-
-API Gateway + Lambda – śledzenie wizyt
-
-CloudWatch + SNS – monitoring i alerty
-
-CloudFormation – Infrastructure as Code
-
-## 🤖 Chatbot AI
-
-Zintegrowany chatbot AI na froncie – wdrożony w AWS Lambda + API Gateway z modelem Bedrock Claude.
-
-Odpowiada na pytania o moje umiejętności i projekty
-
-Dynamiczne okienko czatu z animacjami
-
-Pole input zawsze widoczne na dole + auto-scroll wiadomości
-
-Funkcje bezpieczeństwa: normalizacja tekstu, blocklist, CORS, throttling API Gateway
-
-👉 Demo: https://crow-project.click
-
-## 🔮 Plany rozwoju
-
- GitHub Actions lub AWS CodePipeline do automatycznych wdrożeń
-
- Przechowywanie sekretów w AWS Secrets Manager / SSM Parameter Store
-
- Rozszerzenie reguł AWS WAF dla lepszej ochrony
-
- Dodanie ALB + Auto Scaling Group dla backendu
-
- Migracja kontenerów do ECS Fargate lub Amazon EKS
-
- Ograniczanie zapytań do chatbota w DynamoDB (rate-limiting z TTL)
-
- Dodanie pamięci/dysku do dashboardu CloudWatch
-
- Śledzenie błędów 5xx i latencji API
-
- Rozszerzone śledzenie odwiedzin (DynamoDB + dashboard analityczny)
-
-## 🧠 Cele projektu
-
-Pokazanie architektury multi-tier w AWS
-
-Demonstracja backendu + umiejętności w obszarze infrastruktury
-
-Podkreślenie integracji z IaC, monitoringiem i SSL
-
-🍃 O autorze
-
-**Adam Wrona** – początkujący DevOps Engineer pasjonujący się budowaniem rozwiązań chmurowych z użyciem **AWS**, **Terraform** i automatyzacją w praktyce.
-Certyfikowany w AWS, napędzany kawą ☕ i tworzący projekty hands-on, aby wejść do branży IT od zera.
-
-
-🌍 GitHub – @cloudcr0w
-
-📫 adamwronowy@gmail.com
+Strona: https://crow-project.click  
+Obecnie działa statyczny frontend na **S3 + CloudFront**.  
+*Trwa migracja backendu formularza kontaktowego do Lambda + S3 + SNS.*
 
 ---
 
->- *"DevOpsu nie nauczysz się z filmików — tylko naprawiając to, co padnie o 2 w nocy.”*
->- — ktoś, kto raz odpalił terraform apply na produkcji
+## 🤖 Chatbot AI
+
+Zintegrowany chatbot AI na froncie – wdrożony w **AWS Lambda + API Gateway** z modelem **Bedrock Claude**.  
+
+- Odpowiada na pytania o moje umiejętności i projekty  
+- Dynamiczne okienko czatu z animacjami  
+- Pole input zawsze widoczne na dole + auto-scroll wiadomości  
+- Funkcje bezpieczeństwa: normalizacja tekstu, blocklist, CORS, throttling API Gateway  
+
+👉 Demo: [https://crow-project.click](https://crow-project.click)  
+
+---
+
+## 🔮 Co dalej?
+
+Patrz **FUTURE_PLANS.md** dla nadchodzących usprawnień:
+
+- Auto Scaling, ALB
+- GitHub Actions (CI/CD)
+- ECS lub EKS
+- Reguły WAF
+- Secrets Manager lub Parameter Store
+- Serverless contact form (Lambda + S3 + SNS/SES)
+
+---
+
+## 🧠 Cele projektu
+
+- Pokazanie architektury multi-tier w AWS  
+- Demonstracja backendu + umiejętności w obszarze infrastruktury  
+- Podkreślenie integracji z IaC, monitoringiem i SSL  
+- Wyróżnienie optymalizacji kosztów i praktyk cloud governance  
+
+---
+
+## 🍃 O autorze
+
+**Adam Wrona** – początkujący DevOps Engineer pasjonujący się budowaniem rozwiązań chmurowych z użyciem **AWS**, **Terraform** i automatyzacją w praktyce.  
+Certyfikowany w AWS, napędzany kawą ☕ i tworzący projekty hands-on, aby wejść do branży IT od zera.  
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Adam%20Wrona-blue?logo=linkedin&style=flat-square)](https://www.linkedin.com/in/adam-wrona-111ba728b/)  
+🌍 [GitHub – @cloudcr0w](https://github.com/cloudcr0w)  
+📫 adamwronowy@gmail.com  
+
+---
+
+> ☁️ *"DevOpsu nie nauczysz się z filmików — tylko naprawiając to, co padnie o 2 w nocy.”*  
+> — ktoś, kto raz odpalił `terraform apply` na produkcji
