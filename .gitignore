@@ -30,3 +30,9 @@ Thumbs.db
 tmp/
 
 working-directory: ./frontend
+
+# CLI helper JSON files
+endpoints.json
+fields.json
+stream-policy.json
+
